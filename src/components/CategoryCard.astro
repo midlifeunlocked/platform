@@ -1,79 +1,91 @@
 ---
 /**
- * CategoryCard — a lesson category entry point. Compact, type-led tile with a
- * lesson count and a hover reveal. No imagery required, so the category grid
- * stays fast and uniform.
+ * CategoryCard — image tile with the category name overlaid on a darkened
+ * photo and a lock glyph, matching the original site's category row.
  */
 import Icon from './Icon.astro';
 
 interface Props {
   name: string;
   count: number;
+  image: string;
   href?: string;
-  /** two-digit index used as a quiet structural marker */
-  index?: number;
-  /** passthrough (e.g. data-reveal, style, class) */
   [key: string]: unknown;
 }
 
-const { name, count, href = '#', index, ...rest } = Astro.props;
-const marker = index != null ? String(index).padStart(2, '0') : undefined;
+const { name, count, image, href = '#', ...rest } = Astro.props;
 ---
 
 <a class="cat" href={href} {...rest}>
-  {marker && <span class="cat__marker">{marker}</span>}
+  <img class="cat__img" src={image} alt="" loading="lazy" />
+  <span class="cat__scrim"></span>
+  <span class="cat__lock"><Icon name="lock" size={15} /></span>
   <span class="cat__body">
     <span class="cat__name">{name}</span>
-    <span class="cat__count">{count} lessons</span>
+    <span class="cat__count">{count} {count === 1 ? 'lesson' : 'lessons'}</span>
   </span>
-  <span class="cat__arrow"><Icon name="arrow-right" size={18} /></span>
 </a>
 
 <style>
   .cat {
-    display: flex;
-    align-items: center;
-    gap: var(--mu-space-4);
-    padding: var(--mu-space-5);
-    color: var(--mu-white);
-    background: var(--mu-surface-2);
-    border: 1px solid var(--mu-line-soft);
-    border-radius: var(--mu-radius);
-    transition:
-      background-color var(--mu-dur) var(--mu-ease),
-      border-color var(--mu-dur) var(--mu-ease),
-      transform var(--mu-dur) var(--mu-ease);
-  }
-  .cat:hover {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
     color: var(--mu-white);
     background: var(--mu-surface-3);
-    border-color: var(--mu-bronze-soft);
-    transform: translateY(-3px);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-lg);
+    overflow: hidden;
+    transition: transform var(--mu-dur) var(--mu-ease), border-color var(--mu-dur) var(--mu-ease);
+  }
+  .cat:hover { color: var(--mu-white); transform: translateY(-4px); border-color: var(--mu-bronze); }
+
+  .cat__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--mu-dur-slow) var(--mu-ease);
+  }
+  .cat:hover .cat__img { transform: scale(1.06); }
+
+  .cat__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(18, 18, 20, 0.1) 25%, rgba(18, 18, 20, 0.55) 60%, rgba(18, 18, 20, 0.92) 100%);
   }
 
-  .cat__marker {
-    font-family: var(--mu-font-mono);
-    font-size: var(--mu-text-sm);
-    font-weight: var(--mu-weight-bold);
-    color: var(--mu-faint);
-    transition: color var(--mu-dur) var(--mu-ease);
+  .cat__lock {
+    position: absolute;
+    top: var(--mu-space-3);
+    left: var(--mu-space-3);
+    display: grid;
+    place-items: center;
+    width: 32px; height: 32px;
+    color: var(--mu-bronze-soft);
+    background: rgba(18, 18, 20, 0.55);
+    backdrop-filter: blur(6px);
+    border-radius: var(--mu-radius-pill);
   }
-  .cat:hover .cat__marker { color: var(--mu-bronze-soft); }
 
-  .cat__body { display: grid; gap: 2px; margin-right: auto; }
+  .cat__body {
+    position: absolute;
+    left: var(--mu-space-5);
+    right: var(--mu-space-4);
+    bottom: var(--mu-space-4);
+    display: grid;
+    gap: 2px;
+  }
   .cat__name {
     font-family: var(--mu-font-display);
-    font-size: var(--mu-text-lg);
+    font-size: var(--mu-text-xl);
     font-weight: var(--mu-weight-bold);
-    letter-spacing: -0.01em;
+    letter-spacing: var(--mu-tracking-tight);
+    line-height: 1.1;
   }
   .cat__count {
     font-size: var(--mu-text-xs);
-    color: var(--mu-mute);
+    color: var(--mu-fog);
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
-
-  .cat__arrow { color: var(--mu-faint); transition: transform var(--mu-dur) var(--mu-ease), color var(--mu-dur) var(--mu-ease); }
-  .cat:hover .cat__arrow { color: var(--mu-bronze-soft); transform: translateX(3px); }
 </style>

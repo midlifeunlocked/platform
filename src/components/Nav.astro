@@ -21,7 +21,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
 <header class="nav" data-nav>
   <div class="mu-container mu-container--wide nav__inner">
     <a class="nav__brand" href="/" aria-label="Midlife Unlocked — home">
-      <img src="/brand/logo-wordmark-white.png" alt="Midlife Unlocked" height="26" />
+      <img src="/brand/logo.png" alt="Midlife Unlocked" height="48" width="48" />
     </a>
 
     <nav class="nav__links" aria-label="Primary">
@@ -64,8 +64,8 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
     gap: var(--mu-space-5);
     height: 72px;
   }
-  .nav__brand { flex-shrink: 0; }
-  .nav__brand img { height: 26px; width: auto; }
+  .nav__brand { flex-shrink: 0; display: flex; align-items: center; }
+  .nav__brand img { height: 48px; width: 48px; }
 
   .nav__links {
     display: flex;

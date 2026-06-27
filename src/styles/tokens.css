@@ -57,14 +57,14 @@
   --mu-text-base: 1rem;      /* 16 — body                                   */
   --mu-text-lg:   1.125rem;  /* 18 — lead / h5                              */
   --mu-text-xl:   1.375rem;  /* 22 — h4                                     */
-  --mu-text-2xl:  1.5rem;    /* 24 — h3                                     */
-  --mu-text-3xl:  clamp(1.9rem, 1.35rem + 2.4vw, 2.375rem);  /* 38 — h2     */
-  --mu-text-4xl:  clamp(2.25rem, 1.4rem + 3.6vw, 3.375rem);  /* 54 — h1     */
+  --mu-text-2xl:  clamp(1.5rem, 1.3rem + 0.7vw, 1.75rem);    /* 24–28 — h3   */
+  --mu-text-3xl:  clamp(2.1rem, 1.5rem + 2.6vw, 2.875rem);   /* 34–46 — h2   */
+  --mu-text-4xl:  clamp(2.4rem, 1.3rem + 4.4vw, 3.625rem);   /* display / h1 */
 
-  --mu-leading-tight:  1.12;
-  --mu-leading-snug:   1.3;
-  --mu-leading-body:   1.75;  /* template 28/16                              */
-  --mu-tracking-tight: -0.015em;
+  --mu-leading-tight:  1.04;
+  --mu-leading-snug:   1.2;
+  --mu-leading-body:   1.7;
+  --mu-tracking-tight: -0.03em;
   --mu-tracking-label: 0.16em;
 
   /* ---- Spacing (4px base) ------------------------------------------------ */
@@ -83,7 +83,7 @@
   --mu-container:      1224px;
   --mu-container-wide: 1320px;
   --mu-gutter:         clamp(1.25rem, 4vw, 1.5rem);  /* template 24px         */
-  --mu-section-y:      clamp(3.5rem, 7vw, 6.5rem);
+  --mu-section-y:      clamp(2.25rem, 3.5vw, 3.75rem);  /* tighter rhythm    */
 
   /* ---- Radius ------------------------------------------------------------ */
   --mu-radius-sm:   8px;

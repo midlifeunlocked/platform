@@ -145,6 +145,28 @@ strong { color: var(--mu-white); font-weight: var(--mu-weight-bold); }
   max-width: 56ch;
 }
 
+/* ---- Horizontal scroll row (carousel) -----------------------------------
+   Cards scroll sideways and bleed off the right edge to signal "more". */
+.mu-row {
+  display: flex;
+  gap: var(--mu-space-5);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: var(--mu-gutter);
+  margin-right: calc(50% - 50vw); /* extend right edge to the viewport */
+  padding-right: var(--mu-gutter);
+  padding-bottom: var(--mu-space-3);
+  scrollbar-width: thin;
+  scrollbar-color: var(--mu-surface-3) transparent;
+}
+.mu-row > * { flex: 0 0 auto; scroll-snap-align: start; }
+.mu-row::-webkit-scrollbar { height: 6px; }
+.mu-row::-webkit-scrollbar-track { background: transparent; }
+.mu-row::-webkit-scrollbar-thumb { background: var(--mu-surface-3); border-radius: var(--mu-radius-pill); }
+.mu-row--lessons > * { width: clamp(264px, 80vw, 324px); }
+.mu-row--cats > * { width: clamp(232px, 70vw, 288px); }
+
 /* ---- Shared card grids --------------------------------------------------- */
 .lesson-grid {
   display: grid;

@@ -30,6 +30,7 @@ export interface Category {
   name: string;
   slug: string;
   blurb: string;
+  image: string;
 }
 
 export interface Course {
@@ -67,12 +68,12 @@ export const instructors: Instructor[] = [
 ];
 
 export const categories: Category[] = [
-  { name: "Masculinity", slug: "masculinity", blurb: "Grounded, mature masculinity for the second chapter." },
-  { name: "Business & Career", slug: "business-and-career", blurb: "Earn, lead, and double your opportunities." },
-  { name: "Confidence", slug: "confidence", blurb: "Rebuild self-respect and unshakeable presence." },
-  { name: "Dating", slug: "dating", blurb: "Meet, attract, and connect — the modern way." },
-  { name: "Image & Style", slug: "image-style", blurb: "Dress and present like the man you’re becoming." },
-  { name: "Fitness & Nutrition", slug: "fitness-nutrition", blurb: "Get stronger and leaner after 40." },
+  { name: "Masculinity", slug: "masculinity", blurb: "Grounded, mature masculinity for the second chapter.", image: "/categories/masculinity.png" },
+  { name: "Business & Career", slug: "business-and-career", blurb: "Earn, lead, and double your opportunities.", image: "/categories/business-and-career.png" },
+  { name: "Confidence", slug: "confidence", blurb: "Rebuild self-respect and unshakeable presence.", image: "/categories/confidence.png" },
+  { name: "Dating", slug: "dating", blurb: "Meet, attract, and connect — the modern way.", image: "/categories/dating.png" },
+  { name: "Image & Style", slug: "image-style", blurb: "Dress and present like the man you’re becoming.", image: "/categories/image-style.png" },
+  { name: "Fitness & Nutrition", slug: "fitness-nutrition", blurb: "Get stronger and leaner after 40.", image: "/categories/fitness-nutrition.png" },
 ];
 
 export const courses: Course[] = [
