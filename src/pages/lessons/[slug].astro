@@ -3,6 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Section from '@components/Section.astro';
 import LessonCard from '@components/LessonCard.astro';
 import InstructorCard from '@components/InstructorCard.astro';
+import Button from '@components/Button.astro';
 import Icon from '@components/Icon.astro';
 import { lessons, getInstructor, getCourse, instructorNames, relatedLessons, toCardProps } from '@/data/catalog';
 
@@ -12,92 +13,81 @@ export function getStaticPaths() {
 
 const { lesson } = Astro.props;
 const lessonInstructors = lesson.instructorSlugs.map(getInstructor).filter(Boolean);
-const instructor = lessonInstructors[0]; // primary, for the sidebar card
+const instructor = lessonInstructors[0];
 const credit = instructorNames(lesson.instructorSlugs);
 const course = getCourse(lesson.courseSlug);
 const related = relatedLessons(lesson, 3);
+const bg = lesson.backdrop || lesson.thumbnail;
 
-// Cloudflare Stream subdomain for the MU account. Videos are currently public
-// (imported with requireSignedURLs:false), so every lesson with a streamId
-// plays for everyone. Phase 5 flips premium to signed URLs and only embeds the
-// player after `canAccessLesson(user.id, lesson.id)` returns true.
+// Cloudflare Stream player. Opened in a lightbox (see <dialog> + script), not
+// embedded inline — matching the original template. Videos are public for now;
+// Phase 5 gates premium behind canAccessLesson() before the lightbox opens.
 const STREAM_CUSTOMER = 'customer-9992c2z2az4qp4mm.cloudflarestream.com';
 const isFree = lesson.access === 'free';
-const playerSrc = lesson.streamId
-  ? `https://${STREAM_CUSTOMER}/${lesson.streamId}/iframe?preload=metadata`
-  : null;
+const playerSrc = lesson.streamId ? `https://${STREAM_CUSTOMER}/${lesson.streamId}/iframe?preload=metadata` : null;
 ---
 
-<BaseLayout
-  title={`${lesson.title} — Midlife Unlocked`}
-  description={lesson.description}
-  ogImage={lesson.thumbnail}
->
+<BaseLayout title={`${lesson.title} — Midlife Unlocked`} description={lesson.description} ogImage={lesson.thumbnail}>
   <article>
-    <!-- Player over a full-bleed backdrop of the lesson image -->
-    <section class="player" style={`--lesson-bg: url('${lesson.backdrop || lesson.thumbnail}')`}>
-      <div class="player__bg" aria-hidden="true"></div>
-      <div class="player__scrim" aria-hidden="true"></div>
-      <div class="mu-container player__inner">
+    <!-- HERO: featured image + title + watch button -->
+    <section class="lhero" style={`--bg: url('${bg}')`}>
+      <div class="lhero__bg" aria-hidden="true"></div>
+      <div class="lhero__scrim" aria-hidden="true"></div>
+      <div class="mu-container lhero__inner">
         <nav class="crumbs" aria-label="Breadcrumb">
           <a href="/categories">Catalogue</a>
           <span aria-hidden="true">/</span>
           <a href="/categories">{lesson.category}</a>
         </nav>
 
-        <div class="stage" data-reveal>
+        <div class="lhero__meta" data-reveal>
+          <span class:list={['lhero__badge', isFree ? 'is-free' : 'is-premium']}>
+            <Icon name={isFree ? 'unlock' : 'lock'} size={13} />{isFree ? 'Free' : 'Premium'}
+          </span>
+          <span class="lhero__cat">{lesson.category}</span>
+          {lesson.duration && <span class="lhero__dot">{lesson.duration}</span>}
+          {course && <span class="lhero__dot">Part of {course.name}</span>}
+        </div>
+
+        <h1 class="lhero__title" data-reveal style="--reveal-delay:70ms">{lesson.title}</h1>
+        {lesson.description && <p class="lhero__desc" data-reveal style="--reveal-delay:140ms">{lesson.description}</p>}
+        {credit && <p class="lhero__by" data-reveal style="--reveal-delay:200ms">Taught by <span>{credit}</span></p>}
+
+        <div class="lhero__actions" data-reveal style="--reveal-delay:260ms">
           {playerSrc ? (
-            <iframe
-              class="stage__player"
-              src={playerSrc}
-              title={lesson.title}
-              loading="lazy"
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-              allowfullscreen
-            ></iframe>
+            <Button data-watch size="lg" icon="play">Watch now</Button>
           ) : (
-            <div class="stage__soon">
-              <img class="stage__img" src={lesson.thumbnail} alt="" width="1280" height="720" />
-              <div class="stage__soon-overlay">
-                <span class="stage__lockicon"><Icon name="play" size={22} /></span>
-                <p class="stage__lockcopy">Video coming soon</p>
-              </div>
-            </div>
+            <span class="lhero__soon"><Icon name="lock" size={16} /> Video coming soon</span>
           )}
         </div>
       </div>
     </section>
 
-    <!-- Detail -->
+    <!-- CONTENT: overview + info sidebar -->
     <Section>
       <div class="detail">
         <div class="detail__main" data-reveal>
-          <div class="detail__meta">
-            <span class="detail__category">{lesson.category}</span>
-            <span class:list={['detail__badge', isFree ? 'is-free' : 'is-premium']}>
-              <Icon name={isFree ? 'unlock' : 'lock'} size={13} />
-              {isFree ? 'Free' : 'Premium'}
-            </span>
-            {lesson.duration && <span class="detail__duration">{lesson.duration}</span>}
-            {course && <span class="detail__duration">Part of {course.name}</span>}
-          </div>
-          <h1 class="detail__title">{lesson.title}</h1>
-          {lesson.description && <p class="detail__desc">{lesson.description}</p>}
-          {credit && <p class="detail__by">Taught by <span class="detail__credit">{credit}</span></p>}
-
-          {/* Phase 5 reinstates the premium gate (lock + "Unlock with Premium")
-              here, shown only when canAccessLesson() is false. */}
-
-          {lesson.details && (
-            <div class="detail__about">
-              <h2 class="detail__about-title">About this masterclass</h2>
+          {lesson.details ? (
+            <>
+              <h2 class="detail__h">About this masterclass</h2>
               <div class="rich" set:html={lesson.details} />
-            </div>
+            </>
+          ) : (
+            <p class="detail__lead">{lesson.description}</p>
           )}
         </div>
 
-        {instructor && (
-          <aside class="detail__side" data-reveal style="--reveal-delay:120ms">
+        <aside class="detail__side" data-reveal style="--reveal-delay:120ms">
+          <div class="info">
+            <h3 class="info__h">Details</h3>
+            <dl class="info__list">
+              <div><dt>Category</dt><dd>{lesson.category}</dd></div>
+              {lesson.duration && <div><dt>Length</dt><dd>{lesson.duration}</dd></div>}
+              {course && <div><dt>Course</dt><dd>{course.name}</dd></div>}
+              <div><dt>Access</dt><dd>{isFree ? 'Free' : 'Premium'}</dd></div>
+            </dl>
+          </div>
+          {instructor && (
             <InstructorCard
               name={instructor.name}
               role={instructor.role}
@@ -105,115 +95,132 @@ const playerSrc = lesson.streamId
               specialties={instructor.specialties}
               href={`/instructors/${instructor.slug}`}
             />
-          </aside>
-        )}
+          )}
+        </aside>
       </div>
     </Section>
 
-    <!-- Related -->
+    <!-- RELATED -->
     <Section tone="inset" eyebrow="Keep going" title="More like this">
       <div class="lesson-grid">
         {related.map((l, i) => <LessonCard {...toCardProps(l)} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
       </div>
     </Section>
   </article>
+
+  {playerSrc && (
+    <dialog class="lightbox" data-lightbox aria-label={`${lesson.title} video`}>
+      <div class="lightbox__inner">
+        <button class="lightbox__close" data-close aria-label="Close video"><Icon name="close" size={22} /></button>
+        <div class="lightbox__frame">
+          <iframe data-frame title={lesson.title} allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" allowfullscreen></iframe>
+        </div>
+      </div>
+    </dialog>
+  )}
 </BaseLayout>
 
+<script define:vars={{ src: playerSrc }}>
+  if (src) {
+    const dlg = document.querySelector('[data-lightbox]');
+    const frame = dlg.querySelector('[data-frame]');
+    const open = () => { frame.src = `${src}&autoplay=true`; dlg.showModal(); };
+    const close = () => dlg.close();
+    document.querySelectorAll('[data-watch]').forEach((b) => b.addEventListener('click', open));
+    dlg.querySelector('[data-close]').addEventListener('click', close);
+    dlg.addEventListener('close', () => { frame.src = ''; }); // stop playback on close
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); }); // click backdrop
+  }
+</script>
+
 <style>
-  .player {
+  /* ---- Hero ---- */
+  .lhero {
     position: relative;
-    overflow: hidden;
-    padding-top: clamp(2.5rem, 9vw, 7rem);
-    padding-bottom: var(--mu-space-7);
-  }
-  /* full-bleed cover image of the lesson behind the player */
-  .player__bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background-image: var(--lesson-bg);
-    background-size: cover;
-    background-position: 50% 28%;
-  }
-  /* dark scrim: darker at top (crumbs) and bottom (fade to page), lighter mid */
-  .player__scrim {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background:
-      linear-gradient(
-        to bottom,
-        rgba(18, 18, 20, 0.85) 0%,
-        rgba(18, 18, 20, 0.34) 22%,
-        rgba(18, 18, 20, 0.34) 52%,
-        var(--mu-bg) 99%
-      );
-  }
-  .player__inner { position: relative; z-index: 2; }
-  .crumbs {
     display: flex;
-    gap: var(--mu-space-2);
-    margin-bottom: var(--mu-space-5);
-    color: var(--mu-mute);
-    font-size: var(--mu-text-sm);
+    align-items: flex-end;
+    min-height: clamp(540px, 82vh, 820px);
+    margin-top: -72px;          /* slide under the sticky nav */
+    padding-top: 72px;
+    overflow: hidden;
   }
-  .crumbs a { color: var(--mu-mute); }
+  .lhero__bg {
+    position: absolute; inset: 0; z-index: 0;
+    background-image: var(--bg);
+    background-size: cover;
+    background-position: 50% 30%;
+  }
+  .lhero__scrim {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      linear-gradient(to top, var(--mu-bg) 2%, rgba(18,18,20,0.86) 26%, rgba(18,18,20,0.32) 62%, rgba(18,18,20,0.55) 100%);
+  }
+  .lhero__inner { position: relative; z-index: 2; width: 100%; padding-block: var(--mu-space-7) var(--mu-space-8); }
+
+  .crumbs { display: flex; gap: var(--mu-space-2); margin-bottom: var(--mu-space-5); color: var(--mu-mute); font-size: var(--mu-text-sm); }
+  .crumbs a { color: var(--mu-fog); }
   .crumbs a:hover { color: var(--mu-bronze-soft); }
 
-  .stage {
-    position: relative;
-    aspect-ratio: 16 / 9;
-    border: 1px solid var(--mu-line);
-    border-radius: var(--mu-radius-lg);
-    overflow: hidden;
-    background: #000;
-    box-shadow: var(--mu-shadow-lg);
-  }
-  .stage__player { width: 100%; height: 100%; border: 0; display: block; }
-
-  /* fallback for lessons whose video hasn't been ported yet */
-  .stage__soon { position: absolute; inset: 0; }
-  .stage__img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4) saturate(0.8); }
-  .stage__soon-overlay {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    gap: var(--mu-space-4);
-    text-align: center;
-    padding: var(--mu-space-5);
-  }
-  .stage__lockicon {
-    display: grid;
-    place-items: center;
-    width: 56px; height: 56px;
-    color: var(--mu-bronze-soft);
-    background: var(--mu-bronze-tint);
-    border-radius: var(--mu-radius-pill);
-  }
-  .stage__lockcopy { color: var(--mu-white); font-family: var(--mu-font-display); font-weight: var(--mu-weight-bold); font-size: var(--mu-text-lg); }
-
-  .detail { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--mu-space-8); align-items: start; }
-  .detail__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mu-space-3); }
-  .detail__category { color: var(--mu-bronze-soft); font-size: var(--mu-text-xs); font-weight: var(--mu-weight-bold); letter-spacing: var(--mu-tracking-label); text-transform: uppercase; }
-  .detail__badge {
+  .lhero__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mu-space-3); margin-bottom: var(--mu-space-4); }
+  .lhero__badge {
     display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 10px; font-size: var(--mu-text-xs); font-weight: var(--mu-weight-bold);
-    text-transform: uppercase; border-radius: var(--mu-radius-pill);
+    padding: 4px 11px; font-size: var(--mu-text-xs); font-weight: var(--mu-weight-bold);
+    text-transform: uppercase; letter-spacing: 0.04em; border-radius: var(--mu-radius-pill);
   }
-  .detail__badge.is-free { color: var(--mu-on-accent); background: var(--mu-bronze); }
-  .detail__badge.is-premium { color: var(--mu-fog); background: var(--mu-surface-3); border: 1px solid var(--mu-line); }
-  .detail__duration { color: var(--mu-mute); font-size: var(--mu-text-sm); }
-  .detail__title { margin-top: var(--mu-space-4); font-size: var(--mu-text-3xl); }
-  .detail__desc { margin-top: var(--mu-space-4); font-size: var(--mu-text-lg); color: var(--mu-fog); max-width: 60ch; }
-  .detail__by { margin-top: var(--mu-space-4); color: var(--mu-mute); }
-  .detail__credit { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
-  .detail__cta { display: flex; flex-wrap: wrap; gap: var(--mu-space-4); margin-top: var(--mu-space-6); }
-  .detail__about { margin-top: var(--mu-space-7); padding-top: var(--mu-space-6); border-top: 1px solid var(--mu-line-soft); }
-  .detail__about-title { font-size: var(--mu-text-xl); margin-bottom: var(--mu-space-5); }
+  .lhero__badge.is-free { color: var(--mu-on-accent); background: var(--mu-bronze); }
+  .lhero__badge.is-premium { color: var(--mu-fog); background: rgba(18,18,20,0.6); border: 1px solid var(--mu-line); }
+  .lhero__cat { color: var(--mu-bronze-soft); font-size: var(--mu-text-xs); font-weight: var(--mu-weight-bold); letter-spacing: var(--mu-tracking-label); text-transform: uppercase; }
+  .lhero__dot { color: var(--mu-mute); font-size: var(--mu-text-sm); }
+  .lhero__dot::before { content: '·'; margin-right: var(--mu-space-3); color: var(--mu-faint); }
+
+  .lhero__title { font-size: var(--mu-text-4xl); max-width: 18ch; }
+  .lhero__desc { margin-top: var(--mu-space-4); font-size: var(--mu-text-lg); color: var(--mu-fog); max-width: 56ch; }
+  .lhero__by { margin-top: var(--mu-space-3); color: var(--mu-mute); }
+  .lhero__by span { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
+  .lhero__actions { margin-top: var(--mu-space-6); }
+  .lhero__soon { display: inline-flex; align-items: center; gap: var(--mu-space-2); color: var(--mu-mute); font-weight: var(--mu-weight-bold); }
+
+  /* ---- Content ---- */
+  .detail { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--mu-space-8); align-items: start; }
+  .detail__h { font-size: var(--mu-text-xl); margin-bottom: var(--mu-space-5); }
+  .detail__lead { font-size: var(--mu-text-lg); color: var(--mu-fog); }
+
+  .info {
+    padding: var(--mu-space-6);
+    margin-bottom: var(--mu-space-5);
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-lg);
+  }
+  .info__h { font-size: var(--mu-text-lg); margin-bottom: var(--mu-space-4); }
+  .info__list { display: grid; gap: var(--mu-space-4); }
+  .info__list div { display: flex; justify-content: space-between; gap: var(--mu-space-4); border-bottom: 1px solid var(--mu-line-soft); padding-bottom: var(--mu-space-3); }
+  .info__list div:last-child { border-bottom: 0; padding-bottom: 0; }
+  .info__list dt { color: var(--mu-mute); font-size: var(--mu-text-sm); }
+  .info__list dd { color: var(--mu-white); font-weight: var(--mu-weight-bold); font-size: var(--mu-text-sm); text-align: right; }
+
+  /* ---- Lightbox ---- */
+  .lightbox {
+    width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh;
+    margin: 0; padding: var(--mu-gutter); border: 0; background: transparent;
+    place-items: center;
+  }
+  .lightbox[open] { display: grid; }
+  .lightbox::backdrop { background: rgba(0,0,0,0.88); backdrop-filter: blur(4px); }
+  .lightbox__inner { position: relative; width: min(1120px, 100%); }
+  .lightbox__frame { aspect-ratio: 16/9; border-radius: var(--mu-radius-lg); overflow: hidden; box-shadow: var(--mu-shadow-lg); background: #000; }
+  .lightbox__frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .lightbox__close {
+    position: absolute; top: -52px; right: 0;
+    display: grid; place-items: center; width: 40px; height: 40px;
+    color: var(--mu-white); background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: var(--mu-radius-pill); cursor: pointer;
+    transition: background-color var(--mu-dur) var(--mu-ease);
+  }
+  .lightbox__close:hover { background: rgba(255,255,255,0.2); }
 
   @media (max-width: 860px) {
     .detail { grid-template-columns: 1fr; gap: var(--mu-space-6); }
+    .lhero { min-height: 78vh; }
   }
 </style>
