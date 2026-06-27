@@ -184,6 +184,54 @@ strong { color: var(--mu-white); font-weight: var(--mu-weight-bold); }
   }
 }
 
+/* ---- Rich text (CMS lesson bodies, injected via set:html) ----------------
+   Must be global: scoped component styles don't reach set:html content. */
+.rich { color: var(--mu-fog); max-width: 68ch; }
+.rich > * + * { margin-top: var(--mu-space-4); }
+.rich h5, .rich h4 {
+  color: var(--mu-white);
+  font-size: var(--mu-text-xl);
+  line-height: var(--mu-leading-snug);
+}
+.rich h6 {
+  color: var(--mu-bronze-soft);
+  font-size: var(--mu-text-xs);
+  font-weight: var(--mu-weight-bold);
+  letter-spacing: var(--mu-tracking-label);
+  text-transform: uppercase;
+}
+.rich p { color: var(--mu-fog); }
+.rich strong { color: var(--mu-white); }
+.rich em { color: var(--mu-mute); }
+.rich a { color: var(--mu-bronze-soft); text-decoration: underline; }
+.rich ul, .rich ol { display: grid; gap: var(--mu-space-3); padding-left: 0; }
+.rich li {
+  position: relative;
+  padding-left: 1.75rem;
+  color: var(--mu-fog);
+  list-style: none;
+}
+.rich ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--mu-bronze);
+}
+.rich ol { counter-reset: rich; }
+.rich ol li { counter-increment: rich; }
+.rich ol li::before {
+  content: counter(rich);
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--mu-bronze-soft);
+  font-weight: var(--mu-weight-bold);
+  font-size: var(--mu-text-sm);
+}
+
 /* Visually hidden but accessible */
 .mu-visually-hidden {
   position: absolute;

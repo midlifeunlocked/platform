@@ -82,6 +82,13 @@ const unlocked = lesson.access === 'free';
               <Button href="/signup" size="lg" variant="ghost">Start free</Button>
             </div>
           )}
+
+          {lesson.details && (
+            <div class="detail__about">
+              <h2 class="detail__about-title">About this masterclass</h2>
+              <div class="rich" set:html={lesson.details} />
+            </div>
+          )}
         </div>
 
         {instructor && (
@@ -183,6 +190,8 @@ const unlocked = lesson.access === 'free';
   .detail__by { margin-top: var(--mu-space-4); color: var(--mu-mute); }
   .detail__credit { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
   .detail__cta { display: flex; flex-wrap: wrap; gap: var(--mu-space-4); margin-top: var(--mu-space-6); }
+  .detail__about { margin-top: var(--mu-space-7); padding-top: var(--mu-space-6); border-top: 1px solid var(--mu-line-soft); }
+  .detail__about-title { font-size: var(--mu-text-xl); margin-bottom: var(--mu-space-5); }
 
   @media (max-width: 860px) {
     .detail { grid-template-columns: 1fr; gap: var(--mu-space-6); }
