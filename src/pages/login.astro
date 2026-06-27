@@ -1,0 +1,62 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/Button.astro';
+---
+
+<BaseLayout title="Log in — Midlife Unlocked" description="Log in to your Midlife Unlocked account.">
+  <section class="auth">
+    <div class="auth__card" data-reveal>
+      <a class="auth__brand" href="/"><img src="/brand/logo-wordmark-white.png" alt="Midlife Unlocked" height="24" /></a>
+      <h1 class="auth__title">Welcome back</h1>
+      <p class="auth__sub">Log in to pick up where you left off.</p>
+
+      <!-- NOTE: presentational in Phase 1; wired to Supabase auth in a later phase. -->
+      <form class="auth__form">
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
+        </div>
+        <Button type="submit" full size="lg">Log in</Button>
+      </form>
+
+      <p class="auth__alt">New to Midlife Unlocked? <a href="/signup">Sign up free</a>.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .auth { display: grid; place-items: center; padding: clamp(2.5rem, 6vw, 5rem) var(--mu-gutter); }
+  .auth__card {
+    width: 100%;
+    max-width: 440px;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-lg);
+  }
+  .auth__brand { display: inline-block; margin-bottom: var(--mu-space-6); }
+  .auth__brand img { height: 24px; }
+  .auth__title { font-size: var(--mu-text-2xl); }
+  .auth__sub { margin-top: var(--mu-space-2); color: var(--mu-mute); }
+  .auth__form { display: grid; gap: var(--mu-space-5); margin-top: var(--mu-space-6); }
+  .field { display: grid; gap: var(--mu-space-2); }
+  .field label { color: var(--mu-white); font-weight: var(--mu-weight-bold); font-size: var(--mu-text-sm); }
+  .field input {
+    width: 100%;
+    padding: var(--mu-space-3) var(--mu-space-4);
+    color: var(--mu-white);
+    font: inherit;
+    background: var(--mu-bg);
+    border: 1px solid var(--mu-line);
+    border-radius: var(--mu-radius-sm);
+    transition: border-color var(--mu-dur) var(--mu-ease);
+  }
+  .field input::placeholder { color: var(--mu-faint); }
+  .field input:focus { outline: none; border-color: var(--mu-bronze); }
+  .auth__alt { margin-top: var(--mu-space-5); color: var(--mu-mute); font-size: var(--mu-text-sm); }
+  .auth__alt a { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
+</style>

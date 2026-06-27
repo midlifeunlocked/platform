@@ -1,0 +1,186 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Section from '@components/Section.astro';
+import LessonCard from '@components/LessonCard.astro';
+import InstructorCard from '@components/InstructorCard.astro';
+import Button from '@components/Button.astro';
+import Icon from '@components/Icon.astro';
+import { lessons, getInstructor, relatedLessons, toCardProps } from '@/data/catalog';
+
+export function getStaticPaths() {
+  return lessons.map((lesson) => ({ params: { slug: lesson.slug }, props: { lesson } }));
+}
+
+const { lesson } = Astro.props;
+const instructor = getInstructor(lesson.instructorSlug);
+const related = relatedLessons(lesson, 3);
+
+/*
+ * Display gating. In Phase 1 we gate on the lesson's own `access` field. When
+ * the entitlement layer is live this becomes:
+ *   const unlocked = await canAccessLesson(user.id, lesson.id)
+ * and the signed Cloudflare Stream token is only minted when `unlocked`.
+ */
+const unlocked = lesson.access === 'free';
+---
+
+<BaseLayout
+  title={`${lesson.title} — Midlife Unlocked`}
+  description={lesson.description}
+  ogImage={lesson.thumbnail}
+>
+  <article>
+    <!-- Player / lock -->
+    <section class="player">
+      <div class="mu-container">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/categories">Catalogue</a>
+          <span aria-hidden="true">/</span>
+          <a href="/categories">{lesson.category}</a>
+        </nav>
+
+        <div class:list={['stage', { 'stage--locked': !unlocked }]} data-reveal>
+          <img class="stage__img" src={lesson.thumbnail} alt="" width="1280" height="720" />
+          {unlocked ? (
+            <button class="stage__play" aria-label={`Play ${lesson.title}`}>
+              <Icon name="play" size={26} />
+            </button>
+          ) : (
+            <div class="stage__lock">
+              <span class="stage__lockicon"><Icon name="lock" size={22} /></span>
+              <p class="stage__lockcopy">This is a Premium masterclass</p>
+              <Button href="/pricing" icon="arrow-right">Unlock with Premium</Button>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- Detail -->
+    <Section>
+      <div class="detail">
+        <div class="detail__main" data-reveal>
+          <div class="detail__meta">
+            <span class="detail__category">{lesson.category}</span>
+            <span class:list={['detail__badge', unlocked ? 'is-free' : 'is-premium']}>
+              <Icon name={unlocked ? 'unlock' : 'lock'} size={13} />
+              {unlocked ? 'Free' : 'Premium'}
+            </span>
+            <span class="detail__duration">{lesson.duration}</span>
+          </div>
+          <h1 class="detail__title">{lesson.title}</h1>
+          <p class="detail__desc">{lesson.description}</p>
+          {instructor && <p class="detail__by">Taught by <a href={`/instructors/${instructor.slug}`}>{instructor.name}</a> · {instructor.role}</p>}
+
+          {!unlocked && (
+            <div class="detail__cta">
+              <Button href="/pricing" size="lg" icon="arrow-right">Unlock with Premium</Button>
+              <Button href="/signup" size="lg" variant="ghost">Start free</Button>
+            </div>
+          )}
+        </div>
+
+        {instructor && (
+          <aside class="detail__side" data-reveal style="--reveal-delay:120ms">
+            <InstructorCard
+              name={instructor.name}
+              role={instructor.role}
+              photo={instructor.photo}
+              specialties={instructor.specialties}
+              href={`/instructors/${instructor.slug}`}
+            />
+          </aside>
+        )}
+      </div>
+    </Section>
+
+    <!-- Related -->
+    <Section tone="inset" eyebrow="Keep going" title="More like this">
+      <div class="lesson-grid">
+        {related.map((l, i) => <LessonCard {...toCardProps(l)} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
+      </div>
+    </Section>
+  </article>
+</BaseLayout>
+
+<style>
+  .player { padding-top: var(--mu-space-7); }
+  .crumbs {
+    display: flex;
+    gap: var(--mu-space-2);
+    margin-bottom: var(--mu-space-5);
+    color: var(--mu-mute);
+    font-size: var(--mu-text-sm);
+  }
+  .crumbs a { color: var(--mu-mute); }
+  .crumbs a:hover { color: var(--mu-bronze-soft); }
+
+  .stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    max-height: 64vh;
+    border: 1px solid var(--mu-line);
+    border-radius: var(--mu-radius-lg);
+    overflow: hidden;
+    background: var(--mu-surface-3);
+  }
+  .stage__img { width: 100%; height: 100%; object-fit: cover; }
+  .stage--locked .stage__img { filter: brightness(0.42) saturate(0.8); }
+
+  .stage__play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 76px; height: 76px;
+    display: grid;
+    place-items: center;
+    color: var(--mu-on-accent);
+    background: var(--mu-bronze);
+    border: none;
+    border-radius: var(--mu-radius-pill);
+    cursor: pointer;
+    transition: transform var(--mu-dur) var(--mu-ease), background-color var(--mu-dur) var(--mu-ease);
+  }
+  .stage__play:hover { transform: scale(1.06); background: var(--mu-bronze-soft); }
+
+  .stage__lock {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: var(--mu-space-4);
+    text-align: center;
+    padding: var(--mu-space-5);
+  }
+  .stage__lockicon {
+    display: grid;
+    place-items: center;
+    width: 56px; height: 56px;
+    color: var(--mu-bronze-soft);
+    background: var(--mu-bronze-tint);
+    border-radius: var(--mu-radius-pill);
+  }
+  .stage__lockcopy { color: var(--mu-white); font-family: var(--mu-font-display); font-weight: var(--mu-weight-bold); font-size: var(--mu-text-lg); }
+
+  .detail { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--mu-space-8); align-items: start; }
+  .detail__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--mu-space-3); }
+  .detail__category { color: var(--mu-bronze-soft); font-size: var(--mu-text-xs); font-weight: var(--mu-weight-bold); letter-spacing: var(--mu-tracking-label); text-transform: uppercase; }
+  .detail__badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; font-size: var(--mu-text-xs); font-weight: var(--mu-weight-bold);
+    text-transform: uppercase; border-radius: var(--mu-radius-pill);
+  }
+  .detail__badge.is-free { color: var(--mu-on-accent); background: var(--mu-bronze); }
+  .detail__badge.is-premium { color: var(--mu-fog); background: var(--mu-surface-3); border: 1px solid var(--mu-line); }
+  .detail__duration { color: var(--mu-mute); font-size: var(--mu-text-sm); }
+  .detail__title { margin-top: var(--mu-space-4); font-size: var(--mu-text-3xl); }
+  .detail__desc { margin-top: var(--mu-space-4); font-size: var(--mu-text-lg); color: var(--mu-fog); max-width: 60ch; }
+  .detail__by { margin-top: var(--mu-space-4); color: var(--mu-mute); }
+  .detail__by a { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
+  .detail__cta { display: flex; flex-wrap: wrap; gap: var(--mu-space-4); margin-top: var(--mu-space-6); }
+
+  @media (max-width: 860px) {
+    .detail { grid-template-columns: 1fr; gap: var(--mu-space-6); }
+  }
+</style>

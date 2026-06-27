@@ -1,0 +1,74 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Section from '@components/Section.astro';
+import InstructorCard from '@components/InstructorCard.astro';
+import Button from '@components/Button.astro';
+import { instructors } from '@/data/catalog';
+---
+
+<BaseLayout
+  title="Instructors — Midlife Unlocked"
+  description="Meet the Midlife Unlocked instructors — real, vetted experts in confidence, dating, image, masculinity and business, teaching men over 40."
+>
+  <PageHero
+    eyebrow="The experts"
+    title="Learn from men who’ve done it"
+    intro="Every masterclass is taught by a real, vetted expert — not a manosphere influencer. These are the coaches behind the method."
+  />
+
+  <Section>
+    <div class="instructor-grid">
+      {instructors.map((ins, i) => (
+        <InstructorCard
+          name={ins.name}
+          role={ins.role}
+          photo={ins.photo}
+          bio={ins.bio}
+          specialties={ins.specialties}
+          href={`/instructors/${ins.slug}`}
+          data-reveal
+          style={`--reveal-delay:${i * 80}ms`}
+        />
+      ))}
+    </div>
+  </Section>
+
+  <Section tone="inset">
+    <div class="cta-band" data-reveal>
+      <div>
+        <h2 class="cta-band__title">Become an instructor</h2>
+        <p class="cta-band__text">Are you a recognised expert with a method that helps men over 40 thrive? We’re always looking for the right voices.</p>
+      </div>
+      <Button href="/contact" size="lg" icon="arrow-right">Get in touch</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .instructor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--mu-space-5);
+  }
+  .cta-band {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mu-space-6);
+    flex-wrap: wrap;
+    padding: clamp(2rem, 4vw, 3rem);
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-lg);
+  }
+  .cta-band__title { font-size: var(--mu-text-2xl); }
+  .cta-band__text { margin-top: var(--mu-space-2); color: var(--mu-mute); max-width: 52ch; }
+
+  @media (max-width: 900px) {
+    .instructor-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .instructor-grid { grid-template-columns: 1fr; }
+  }
+</style>

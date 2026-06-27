@@ -1,0 +1,81 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Section from '@components/Section.astro';
+import LessonCard from '@components/LessonCard.astro';
+import { categories, lessonsByCategory, categoryCount, toCardProps } from '@/data/catalog';
+---
+
+<BaseLayout
+  title="Browse lessons by category — Midlife Unlocked"
+  description="Browse the full Midlife Unlocked catalogue — confidence, dating, image, masculinity, body language and business — taught by real experts for men over 40."
+>
+  <PageHero
+    eyebrow="Catalogue"
+    title="Browse lessons by category"
+    intro="Every masterclass, course, and workshop in one place. Free Core lessons are open to all; Premium unlocks the rest."
+  />
+
+  <nav class="chips" aria-label="Lesson categories">
+    <div class="mu-container chips__row">
+      {categories.map((c) => (
+        <a class="chip" href={`#${c.slug}`}>{c.name} <span class="chip__count">{categoryCount(c.name)}</span></a>
+      ))}
+    </div>
+  </nav>
+
+  {categories.map((c, i) => (
+    <Section
+      id={c.slug}
+      tone={i % 2 === 1 ? 'inset' : 'base'}
+      eyebrow={c.blurb}
+      title={c.name}
+    >
+      <div class="lesson-grid">
+        {lessonsByCategory(c.name).map((l, j) => (
+          <LessonCard {...toCardProps(l)} data-reveal style={`--reveal-delay:${j * 70}ms`} />
+        ))}
+      </div>
+    </Section>
+  ))}
+</BaseLayout>
+
+<style>
+  .chips {
+    position: sticky;
+    top: 72px;
+    z-index: 50;
+    background: color-mix(in srgb, var(--mu-bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--mu-line-soft);
+  }
+  .chips__row {
+    display: flex;
+    gap: var(--mu-space-3);
+    overflow-x: auto;
+    padding-block: var(--mu-space-4);
+    scrollbar-width: none;
+  }
+  .chips__row::-webkit-scrollbar { display: none; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mu-space-2);
+    flex-shrink: 0;
+    padding: 8px 16px;
+    color: var(--mu-fog);
+    font-size: var(--mu-text-sm);
+    font-weight: var(--mu-weight-bold);
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-pill);
+    transition: border-color var(--mu-dur) var(--mu-ease), color var(--mu-dur) var(--mu-ease);
+  }
+  .chip:hover { color: var(--mu-white); border-color: var(--mu-bronze); }
+  .chip__count {
+    color: var(--mu-mute);
+    font-size: var(--mu-text-xs);
+  }
+  /* offset anchor jumps for the sticky nav + header */
+  :global(section[id]) { scroll-margin-top: 140px; }
+</style>

@@ -1,0 +1,45 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Section from '@components/Section.astro';
+
+const sections = [
+  { h: 'Information we collect', p: 'Account details you provide (name, email), billing information processed by our payment provider, and usage data such as which lessons you watch and your progress.' },
+  { h: 'How we use your information', p: 'To provide and improve the service, manage your membership and access, process payments, send service and lifecycle emails, and keep the platform secure.' },
+  { h: 'How we share information', p: 'We share data only with the processors needed to run the service (payments, hosting, email). We do not sell your personal information.' },
+  { h: 'Your choices', p: 'You can access, correct, or delete your account information, and opt out of marketing email at any time. Contact us to exercise these rights.' },
+  { h: 'Data security & retention', p: 'We use industry-standard safeguards and retain your information only as long as needed to provide the service and meet legal obligations.' },
+  { h: 'Contact', p: 'Questions about this policy? Reach us via the contact page or at support@midlifeunlocked.com.' },
+];
+---
+
+<BaseLayout title="Privacy Policy — Midlife Unlocked" description="How Midlife Unlocked collects, uses, and protects your information.">
+  <PageHero eyebrow="Legal" title="Privacy Policy" intro="How we collect, use, and protect your information." />
+  <Section>
+    <div class="prose">
+      <p class="prose__note">This is a working draft pending final legal review — it is not yet a binding policy.</p>
+      {sections.map((s) => (
+        <div class="prose__block">
+          <h2>{s.h}</h2>
+          <p>{s.p}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .prose { max-width: 720px; }
+  .prose__note {
+    padding: var(--mu-space-4);
+    margin-bottom: var(--mu-space-6);
+    color: var(--mu-fog);
+    background: var(--mu-bronze-tint);
+    border: 1px solid var(--mu-bronze);
+    border-radius: var(--mu-radius-sm);
+    font-size: var(--mu-text-sm);
+  }
+  .prose__block { margin-bottom: var(--mu-space-6); }
+  .prose__block h2 { font-size: var(--mu-text-xl); margin-bottom: var(--mu-space-2); }
+  .prose__block p { color: var(--mu-fog); }
+</style>

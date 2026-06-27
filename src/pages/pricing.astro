@@ -1,0 +1,140 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Section from '@components/Section.astro';
+import Button from '@components/Button.astro';
+import Faq from '@components/Faq.astro';
+import Icon from '@components/Icon.astro';
+
+const tiers = [
+  {
+    name: 'Free',
+    price: '$0',
+    cadence: 'free forever',
+    highlight: false,
+    cta: { label: 'Sign up free', href: '/signup' },
+    features: [
+      'Free Core lessons across every category',
+      'New free lessons added regularly',
+      'Watch on any device',
+      'No card required',
+    ],
+  },
+  {
+    name: 'Premium',
+    price: '$14.92',
+    cadence: 'per month, billed annually',
+    highlight: true,
+    cta: { label: 'Subscribe today!', href: '/signup' },
+    features: [
+      'Everything in Free',
+      'Every Premium masterclass, course & workshop',
+      'Companion workbooks and assets',
+      'New masterclasses added every month',
+      'Cancel anytime',
+    ],
+  },
+];
+
+const faqs = [
+  { q: 'How does billing work?', a: 'Premium is billed annually, which works out to as little as $14.92 per month. You get instant access to the entire catalogue the moment you join.' },
+  { q: 'Can I cancel at any time?', a: 'Yes — cancel in a couple of clicks from your account. You keep Premium access until the end of your billing period.' },
+  { q: 'What’s the difference between Free and Premium?', a: 'Free Core lessons are a genuine taste of the method. Premium unlocks every full masterclass, the companion workbooks, and everything new we add each month.' },
+  { q: 'Do I need any equipment?', a: 'Just a device and an internet connection. Watch on your TV, laptop, phone, or tablet — and pick up right where you left off.' },
+];
+---
+
+<BaseLayout
+  title="Pricing — Midlife Unlocked"
+  description="Thrive after divorce for as little as $14.92 per month. Upgrade to Premium and unlock every Midlife Unlocked masterclass, course, and workshop."
+>
+  <PageHero
+    eyebrow="Membership"
+    title="Become a member today"
+    intro="Start free, upgrade when you’re ready. Premium unlocks everything for as little as $14.92 per month."
+    align="center"
+  />
+
+  <Section>
+    <div class="tiers">
+      {tiers.map((t, i) => (
+        <div class:list={['tier', { 'tier--featured': t.highlight }]} data-reveal style={`--reveal-delay:${i * 90}ms`}>
+          {t.highlight && <span class="tier__flag">Best value</span>}
+          <h2 class="tier__name">{t.name}</h2>
+          <div class="tier__price">
+            <span class="tier__amount">{t.price}</span>
+            <span class="tier__cadence">{t.cadence}</span>
+          </div>
+          <Button href={t.cta.href} full variant={t.highlight ? 'primary' : 'ghost'} icon="arrow-right">{t.cta.label}</Button>
+          <ul class="tier__features">
+            {t.features.map((f) => (
+              <li><span class="tier__check"><Icon name="check" size={14} /></span>{f}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <Section tone="inset" eyebrow="Questions" title="Pricing FAQ" centered>
+    <Faq items={faqs} />
+  </Section>
+</BaseLayout>
+
+<style>
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--mu-space-5);
+    max-width: 880px;
+    margin-inline: auto;
+    align-items: start;
+  }
+  .tier {
+    position: relative;
+    padding: var(--mu-space-7);
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-lg);
+  }
+  .tier--featured {
+    background:
+      radial-gradient(90% 120% at 100% 0%, rgba(164, 97, 51, 0.16), transparent 55%),
+      var(--mu-green);
+    border-color: var(--mu-green-line);
+  }
+  .tier__flag {
+    position: absolute;
+    top: var(--mu-space-5);
+    right: var(--mu-space-5);
+    padding: 4px 12px;
+    font-size: var(--mu-text-xs);
+    font-weight: var(--mu-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mu-on-accent);
+    background: var(--mu-bronze);
+    border-radius: var(--mu-radius-pill);
+  }
+  .tier__name { font-size: var(--mu-text-2xl); }
+  .tier__price { display: flex; align-items: baseline; gap: var(--mu-space-2); margin: var(--mu-space-3) 0 var(--mu-space-6); }
+  .tier__amount { font-family: var(--mu-font-display); font-size: var(--mu-text-4xl); font-weight: var(--mu-weight-bold); color: var(--mu-white); letter-spacing: -0.02em; }
+  .tier__cadence { color: var(--mu-mute); font-size: var(--mu-text-sm); }
+
+  .tier__features { display: grid; gap: var(--mu-space-3); margin-top: var(--mu-space-6); }
+  .tier__features li { display: flex; align-items: flex-start; gap: var(--mu-space-3); color: var(--mu-fog); font-size: var(--mu-text-sm); }
+  .tier__check {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 22px; height: 22px;
+    margin-top: 1px;
+    color: var(--mu-on-accent);
+    background: var(--mu-bronze);
+    border-radius: var(--mu-radius-pill);
+  }
+
+  @media (max-width: 720px) {
+    .tiers { grid-template-columns: 1fr; }
+  }
+</style>

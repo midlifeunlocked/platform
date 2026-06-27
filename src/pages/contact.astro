@@ -1,0 +1,108 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Section from '@components/Section.astro';
+import Button from '@components/Button.astro';
+import Faq from '@components/Faq.astro';
+import Icon from '@components/Icon.astro';
+
+const faqs = [
+  { q: 'I need help with my account', a: 'The fastest route is the form here or our support page — include the email you signed up with and we’ll sort it out.' },
+  { q: 'Do you offer 1:1 coaching?', a: 'Some of our instructors offer coaching beyond the masterclasses. Get in touch and we’ll point you in the right direction.' },
+  { q: 'Can I partner or advertise with Midlife Unlocked?', a: 'We’re open to the right partnerships. Drop us a message with the details and we’ll get back to you.' },
+];
+---
+
+<BaseLayout
+  title="Contact — Midlife Unlocked"
+  description="Get in touch with the Midlife Unlocked team — account help, partnerships, or becoming an instructor."
+>
+  <PageHero eyebrow="Contact" title="Get in touch with us" intro="Questions about your membership, partnerships, or teaching with us? We read every message." />
+
+  <Section>
+    <div class="contact">
+      <!-- NOTE: form is presentational in Phase 1; wired to the backend in a later phase. -->
+      <form class="contact__form" data-reveal>
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="How can we help?" required></textarea>
+        </div>
+        <Button type="submit" size="lg" icon="arrow-right">Send message</Button>
+      </form>
+
+      <aside class="contact__direct" data-reveal style="--reveal-delay:120ms">
+        <h2 class="contact__h">Reach out directly</h2>
+        <p class="contact__p">Prefer email? We typically reply within one business day.</p>
+        <a class="contact__link" href="mailto:support@midlifeunlocked.com">
+          <Icon name="arrow-right" size={16} /> support@midlifeunlocked.com
+        </a>
+        <a class="contact__link" href="https://w3.midlifeunlocked.com/support">
+          <Icon name="arrow-right" size={16} /> Visit the help centre
+        </a>
+      </aside>
+    </div>
+  </Section>
+
+  <Section tone="inset" eyebrow="Questions" title="Common questions" centered>
+    <Faq items={faqs} />
+  </Section>
+</BaseLayout>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--mu-space-8);
+    align-items: start;
+  }
+  .contact__form { display: grid; gap: var(--mu-space-5); }
+  .field { display: grid; gap: var(--mu-space-2); }
+  .field label { color: var(--mu-white); font-weight: var(--mu-weight-bold); font-size: var(--mu-text-sm); }
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: var(--mu-space-3) var(--mu-space-4);
+    color: var(--mu-white);
+    font: inherit;
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line);
+    border-radius: var(--mu-radius-sm);
+    transition: border-color var(--mu-dur) var(--mu-ease);
+  }
+  .field input::placeholder,
+  .field textarea::placeholder { color: var(--mu-faint); }
+  .field input:focus,
+  .field textarea:focus { outline: none; border-color: var(--mu-bronze); }
+  .field textarea { resize: vertical; }
+
+  .contact__direct {
+    padding: var(--mu-space-6);
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-lg);
+  }
+  .contact__h { font-size: var(--mu-text-xl); }
+  .contact__p { margin-top: var(--mu-space-2); color: var(--mu-mute); }
+  .contact__link {
+    display: flex;
+    align-items: center;
+    gap: var(--mu-space-2);
+    margin-top: var(--mu-space-4);
+    color: var(--mu-bronze-soft);
+    font-weight: var(--mu-weight-bold);
+    font-size: var(--mu-text-sm);
+  }
+  .contact__link:hover { color: var(--mu-white); }
+
+  @media (max-width: 820px) {
+    .contact { grid-template-columns: 1fr; gap: var(--mu-space-6); }
+  }
+</style>

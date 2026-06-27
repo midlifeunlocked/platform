@@ -16,10 +16,17 @@ Built so far:
   Webflow markup reproduced). See below.
 - **Entitlement abstraction layer** — typed interface with a placeholder stub,
   so every later feature routes access decisions through it ([`src/lib/entitlements`](./src/lib/entitlements)).
-- **Homepage** — built from `/reference` (the exported Webflow site + brand assets).
+- **Public site** — built on the pristine Streaming template with MU brand/copy:
+  - Home, `/categories`, `/pricing`, `/instructors` (+ `/instructors/[slug]`),
+    `/contact`, `/lessons/[slug]` (12 masterclass pages with free/premium gating),
+    `/login`, `/signup`, `/privacy`, `/terms`, branded `404`.
+  - Sample catalogue data in [`src/data/catalog.ts`](./src/data/catalog.ts) — the
+    single source pages read from (becomes Supabase in Phase 3). Lesson detail
+    pages show where `canAccessLesson()` will gate the signed Stream token.
 
 Not yet built (later phases, per spec §10): quiz, Supabase, Stripe, the webhook
-service, gated video, member app, admin tooling.
+service, gated video playback, member account area, admin tooling. Auth forms and
+the contact form are presentational until wired in later phases.
 
 ## Develop
 

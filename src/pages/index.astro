@@ -5,34 +5,18 @@ import Button from '@components/Button.astro';
 import Icon from '@components/Icon.astro';
 import LessonCard from '@components/LessonCard.astro';
 import CategoryCard from '@components/CategoryCard.astro';
+import Faq from '@components/Faq.astro';
+import { categories, categoryCount, freeLessons, premiumLessons, toCardProps } from '@/data/catalog';
 
 /* ---------------------------------------------------------------------------
    Homepage — the pristine "Streaming" template's section structure, populated
    with real Midlife Unlocked copy, metadata, and assets (no sample content).
-   Lessons/categories are sample data wired to real MU thumbnails; in later
-   phases this comes from Supabase, gated through the entitlement layer.
+   Catalogue data comes from src/data/catalog.ts; in later phases it comes from
+   Supabase, gated through the entitlement layer.
    ------------------------------------------------------------------------- */
 
-const categories = [
-  { name: 'Confidence', count: 12 },
-  { name: 'Dating & Attraction', count: 18 },
-  { name: 'Image & Style', count: 9 },
-  { name: 'Masculinity', count: 7 },
-  { name: 'Body Language', count: 6 },
-  { name: 'Business', count: 8 },
-];
-
-const freeLessons = [
-  { title: '5 Steps to Command Confidence', category: 'Confidence', instructor: 'Lee Lambert', thumbnail: '/thumbnails/5-steps-to-command-confidence.png', duration: '14 min', access: 'free' as const },
-  { title: 'Make a Head-Turning First Impression', category: 'Image & Style', instructor: 'Aidan Lee', thumbnail: '/thumbnails/make-a-head-turning-first-impression.png', duration: '11 min', access: 'free' as const },
-  { title: 'Read the Room: Body Language', category: 'Body Language', instructor: 'Gav Gillibrand', thumbnail: '/thumbnails/body-language.png', duration: '17 min', access: 'free' as const },
-];
-
-const premiumLessons = [
-  { title: 'Outcome Independence', category: 'Masculinity', instructor: 'Lee Lambert', thumbnail: '/thumbnails/outcome-independence.png', duration: '28 min', access: 'premium' as const },
-  { title: 'Get More Matches on Dating Apps', category: 'Dating & Attraction', instructor: 'Aidan Lee', thumbnail: '/thumbnails/get-more-matches-on-dating-apps.png', duration: '22 min', access: 'premium' as const },
-  { title: 'Make Her Fall For You', category: 'Dating & Attraction', instructor: 'Gav Gillibrand', thumbnail: '/thumbnails/make-her-fall-for-you.png', duration: '31 min', access: 'premium' as const },
-];
+const homeFree = freeLessons().slice(0, 3);
+const homePremium = premiumLessons().slice(0, 3);
 
 const planFeatures = [
   'Core and Premium access to every lesson',
@@ -105,7 +89,7 @@ const faqs = [
     actionHref="/categories"
   >
     <div class="cat-grid">
-      {categories.map((c, i) => <CategoryCard name={c.name} count={c.count} index={i + 1} href="/categories" data-reveal style={`--reveal-delay:${i * 55}ms`} />)}
+      {categories.map((c, i) => <CategoryCard name={c.name} count={categoryCount(c.name)} index={i + 1} href={`/categories#${c.slug}`} data-reveal style={`--reveal-delay:${i * 55}ms`} />)}
     </div>
   </Section>
 
@@ -120,7 +104,7 @@ const faqs = [
     actionHref="/categories#free"
   >
     <div class="lesson-grid">
-      {freeLessons.map((l, i) => <LessonCard {...l} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
+      {homeFree.map((l, i) => <LessonCard {...toCardProps(l)} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
     </div>
   </Section>
 
@@ -134,7 +118,7 @@ const faqs = [
     actionHref="/categories#premium"
   >
     <div class="lesson-grid">
-      {premiumLessons.map((l, i) => <LessonCard {...l} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
+      {homePremium.map((l, i) => <LessonCard {...toCardProps(l)} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
     </div>
   </Section>
 
@@ -184,17 +168,7 @@ const faqs = [
 
   <!-- ===================== FAQ ===================== -->
   <Section eyebrow="Questions" title="Frequently asked questions" centered>
-    <div class="faq" data-reveal>
-      {faqs.map((item) => (
-        <details class="faq__item">
-          <summary class="faq__q">
-            {item.q}
-            <span class="faq__icon"><Icon name="chevron-down" size={20} /></span>
-          </summary>
-          <p class="faq__a">{item.a}</p>
-        </details>
-      ))}
-    </div>
+    <Faq items={faqs} />
   </Section>
 </BaseLayout>
 
@@ -272,20 +246,6 @@ const faqs = [
     .hero__copy { max-width: 100%; }
   }
 
-  /* ---- Category grid ---- */
-  .cat-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--mu-space-4);
-  }
-
-  /* ---- Lesson grid ---- */
-  .lesson-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--mu-space-5);
-  }
-
   /* ---- Pricing band ---- */
   .plan { padding-block: var(--mu-section-y); }
   .plan__card {
@@ -355,47 +315,9 @@ const faqs = [
   .device__name { font-size: var(--mu-text-lg); }
   .device__note { margin-top: var(--mu-space-1); color: var(--mu-mute); font-size: var(--mu-text-sm); }
 
-  /* ---- FAQ ---- */
-  .faq { max-width: 760px; margin-inline: auto; display: grid; gap: var(--mu-space-3); }
-  .faq__item {
-    background: var(--mu-surface-2);
-    border: 1px solid var(--mu-line-soft);
-    border-radius: var(--mu-radius);
-    padding: 0 var(--mu-space-5);
-  }
-  .faq__item[open] { border-color: var(--mu-line); }
-  .faq__q {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--mu-space-4);
-    padding: var(--mu-space-5) 0;
-    color: var(--mu-white);
-    font-family: var(--mu-font-display);
-    font-size: var(--mu-text-lg);
-    font-weight: var(--mu-weight-bold);
-    cursor: pointer;
-    list-style: none;
-  }
-  .faq__q::-webkit-details-marker { display: none; }
-  .faq__icon { color: var(--mu-bronze-soft); flex-shrink: 0; transition: transform var(--mu-dur) var(--mu-ease); }
-  .faq__item[open] .faq__icon { transform: rotate(180deg); }
-  .faq__a {
-    margin: 0;
-    padding-bottom: var(--mu-space-5);
-    color: var(--mu-fog);
-    max-width: 62ch;
-  }
-
-  /* ---- Responsive ---- */
+  /* ---- Responsive (page-specific; shared grids live in global.css) ---- */
   @media (max-width: 1000px) {
-    .cat-grid { grid-template-columns: repeat(2, 1fr); }
-    .lesson-grid { grid-template-columns: repeat(2, 1fr); }
     .device-grid { grid-template-columns: repeat(2, 1fr); }
     .plan__card { grid-template-columns: 1fr; gap: var(--mu-space-6); }
-  }
-  @media (max-width: 620px) {
-    .cat-grid { grid-template-columns: 1fr; }
-    .lesson-grid { grid-template-columns: 1fr; }
   }
 </style>

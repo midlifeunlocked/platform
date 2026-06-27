@@ -1,0 +1,45 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Section from '@components/Section.astro';
+
+const sections = [
+  { h: 'Your account', p: 'You’re responsible for keeping your login secure and for activity under your account. Accounts are for individual use and may not be shared.' },
+  { h: 'Membership & billing', p: 'Premium is billed annually. You can cancel anytime and keep access until the end of your billing period. Prices may change with notice.' },
+  { h: 'Access to content', p: 'A membership grants a personal, non-transferable licence to stream the content you’re entitled to. You may not download, redistribute, or resell it.' },
+  { h: 'Acceptable use', p: 'Don’t misuse the service, attempt to bypass access controls, or use the content to harm others. We may suspend accounts that breach these terms.' },
+  { h: 'Refunds', p: 'Refund eligibility is described at checkout. Where a refund is issued, the related access is revoked.' },
+  { h: 'Contact', p: 'Questions about these terms? Reach us via the contact page or at support@midlifeunlocked.com.' },
+];
+---
+
+<BaseLayout title="Terms & Conditions — Midlife Unlocked" description="The terms that govern your use of Midlife Unlocked.">
+  <PageHero eyebrow="Legal" title="Terms & Conditions" intro="The terms that govern your use of Midlife Unlocked." />
+  <Section>
+    <div class="prose">
+      <p class="prose__note">This is a working draft pending final legal review — it is not yet a binding agreement.</p>
+      {sections.map((s) => (
+        <div class="prose__block">
+          <h2>{s.h}</h2>
+          <p>{s.p}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .prose { max-width: 720px; }
+  .prose__note {
+    padding: var(--mu-space-4);
+    margin-bottom: var(--mu-space-6);
+    color: var(--mu-fog);
+    background: var(--mu-bronze-tint);
+    border: 1px solid var(--mu-bronze);
+    border-radius: var(--mu-radius-sm);
+    font-size: var(--mu-text-sm);
+  }
+  .prose__block { margin-bottom: var(--mu-space-6); }
+  .prose__block h2 { font-size: var(--mu-text-xl); margin-bottom: var(--mu-space-2); }
+  .prose__block p { color: var(--mu-fog); }
+</style>

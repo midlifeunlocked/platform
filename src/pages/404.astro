@@ -1,0 +1,53 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/Button.astro';
+import Icon from '@components/Icon.astro';
+---
+
+<BaseLayout title="Page not found — Midlife Unlocked" description="The page you’re looking for isn’t here.">
+  <section class="nf">
+    <div class="mu-container nf__inner">
+      <span class="nf__icon"><Icon name="lock" size={28} /></span>
+      <p class="nf__code">404</p>
+      <h1 class="nf__title">This page is locked away</h1>
+      <p class="nf__text">The page you’re looking for has moved or never existed. Let’s get you back to something useful.</p>
+      <div class="nf__actions">
+        <Button href="/" size="lg" icon="arrow-right">Back to home</Button>
+        <Button href="/categories" size="lg" variant="ghost">Browse lessons</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    display: grid;
+    place-items: center;
+    min-height: 70vh;
+    text-align: center;
+    padding: clamp(3rem, 8vw, 6rem) 0;
+    background:
+      radial-gradient(60% 80% at 50% 0%, rgba(164, 97, 51, 0.12), transparent 60%),
+      var(--mu-bg);
+  }
+  .nf__inner { max-width: 540px; }
+  .nf__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 64px; height: 64px;
+    color: var(--mu-bronze-soft);
+    background: var(--mu-bronze-tint);
+    border-radius: var(--mu-radius-pill);
+  }
+  .nf__code {
+    margin-top: var(--mu-space-5);
+    font-family: var(--mu-font-display);
+    font-size: var(--mu-text-2xl);
+    font-weight: var(--mu-weight-bold);
+    letter-spacing: var(--mu-tracking-label);
+    color: var(--mu-bronze-soft);
+  }
+  .nf__title { margin-top: var(--mu-space-2); font-size: var(--mu-text-3xl); }
+  .nf__text { margin-top: var(--mu-space-4); color: var(--mu-fog); }
+  .nf__actions { display: flex; flex-wrap: wrap; gap: var(--mu-space-4); justify-content: center; margin-top: var(--mu-space-6); }
+</style>

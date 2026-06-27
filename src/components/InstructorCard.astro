@@ -1,0 +1,73 @@
+---
+/**
+ * InstructorCard — an expert tile: avatar, name, role, and specialties.
+ * Used on the instructors page and on lesson detail pages.
+ */
+interface Props {
+  name: string;
+  role: string;
+  photo: string;
+  specialties?: string[];
+  bio?: string;
+  href?: string;
+  [key: string]: unknown;
+}
+
+const { name, role, photo, specialties = [], bio, href, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag class="instructor" href={href} {...rest}>
+  <img class="instructor__photo" src={photo} alt={name} width="160" height="160" loading="lazy" />
+  <div class="instructor__body">
+    <span class="instructor__role">{role}</span>
+    <h3 class="instructor__name">{name}</h3>
+    {bio && <p class="instructor__bio">{bio}</p>}
+    {specialties.length > 0 && (
+      <ul class="instructor__tags">
+        {specialties.map((s) => <li class="instructor__tag">{s}</li>)}
+      </ul>
+    )}
+  </div>
+</Tag>
+
+<style>
+  .instructor {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mu-space-4);
+    padding: var(--mu-space-6);
+    color: inherit;
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-lg);
+    transition: transform var(--mu-dur) var(--mu-ease), border-color var(--mu-dur) var(--mu-ease);
+  }
+  a.instructor:hover { color: inherit; transform: translateY(-4px); border-color: var(--mu-bronze); }
+
+  .instructor__photo {
+    width: 96px;
+    height: 96px;
+    border-radius: var(--mu-radius-pill);
+    object-fit: cover;
+    border: 2px solid var(--mu-line);
+  }
+  .instructor__role {
+    color: var(--mu-bronze-soft);
+    font-size: var(--mu-text-xs);
+    font-weight: var(--mu-weight-bold);
+    letter-spacing: var(--mu-tracking-label);
+    text-transform: uppercase;
+  }
+  .instructor__name { font-size: var(--mu-text-xl); margin-top: var(--mu-space-1); }
+  .instructor__bio { margin-top: var(--mu-space-2); color: var(--mu-mute); font-size: var(--mu-text-sm); }
+  .instructor__tags { display: flex; flex-wrap: wrap; gap: var(--mu-space-2); margin-top: var(--mu-space-1); }
+  .instructor__tag {
+    padding: 4px 12px;
+    font-size: var(--mu-text-xs);
+    font-weight: var(--mu-weight-medium);
+    color: var(--mu-fog);
+    background: var(--mu-surface-3);
+    border-radius: var(--mu-radius-pill);
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Section from '@components/Section.astro';
+import LessonCard from '@components/LessonCard.astro';
+import Button from '@components/Button.astro';
+import { instructors, lessons, toCardProps } from '@/data/catalog';
+
+export function getStaticPaths() {
+  return instructors.map((instructor) => ({ params: { slug: instructor.slug }, props: { instructor } }));
+}
+
+const { instructor } = Astro.props;
+const taught = lessons.filter((l) => l.instructorSlug === instructor.slug);
+---
+
+<BaseLayout
+  title={`${instructor.name} — Midlife Unlocked`}
+  description={`${instructor.name}, ${instructor.role}. ${instructor.bio}`}
+  ogImage={instructor.photo}
+>
+  <section class="bio">
+    <div class="mu-container bio__inner">
+      <img class="bio__photo" src={instructor.photo} alt={instructor.name} width="200" height="200" data-reveal />
+      <div class="bio__body" data-reveal style="--reveal-delay:90ms">
+        <a class="bio__back" href="/instructors">← All instructors</a>
+        <span class="bio__role">{instructor.role}</span>
+        <h1 class="bio__name">{instructor.name}</h1>
+        <p class="bio__text">{instructor.bio}</p>
+        <ul class="bio__tags">
+          {instructor.specialties.map((s) => <li class="bio__tag">{s}</li>)}
+        </ul>
+        <div class="bio__actions">
+          <Button href="/categories" icon="arrow-right">Browse lessons</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Section tone="inset" eyebrow={`${taught.length} ${taught.length === 1 ? 'lesson' : 'lessons'}`} title={`Lessons by ${instructor.name}`}>
+    <div class="lesson-grid">
+      {taught.map((l, i) => <LessonCard {...toCardProps(l)} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .bio {
+    padding-block: clamp(3rem, 6vw, 5rem);
+    border-bottom: 1px solid var(--mu-line-soft);
+    background:
+      radial-gradient(70% 120% at 100% 0%, rgba(164, 97, 51, 0.12), transparent 55%),
+      var(--mu-bg);
+  }
+  .bio__inner { display: grid; grid-template-columns: auto 1fr; gap: var(--mu-space-8); align-items: center; }
+  .bio__photo {
+    width: 180px; height: 180px;
+    border-radius: var(--mu-radius-lg);
+    object-fit: cover;
+    border: 1px solid var(--mu-line);
+  }
+  .bio__back { color: var(--mu-mute); font-size: var(--mu-text-sm); font-weight: var(--mu-weight-bold); }
+  .bio__back:hover { color: var(--mu-bronze-soft); }
+  .bio__role {
+    display: block;
+    margin-top: var(--mu-space-4);
+    color: var(--mu-bronze-soft);
+    font-size: var(--mu-text-xs);
+    font-weight: var(--mu-weight-bold);
+    letter-spacing: var(--mu-tracking-label);
+    text-transform: uppercase;
+  }
+  .bio__name { margin-top: var(--mu-space-2); font-size: var(--mu-text-4xl); }
+  .bio__text { margin-top: var(--mu-space-4); font-size: var(--mu-text-lg); color: var(--mu-fog); max-width: 60ch; }
+  .bio__tags { display: flex; flex-wrap: wrap; gap: var(--mu-space-2); margin-top: var(--mu-space-5); }
+  .bio__tag {
+    padding: 5px 14px;
+    font-size: var(--mu-text-sm);
+    color: var(--mu-fog);
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-pill);
+  }
+  .bio__actions { margin-top: var(--mu-space-6); }
+
+  @media (max-width: 720px) {
+    .bio__inner { grid-template-columns: 1fr; gap: var(--mu-space-5); }
+  }
+</style>
