@@ -1,0 +1,71 @@
+---
+/**
+ * BaseLayout — the page shell: head, fonts preload, Nav, <slot/>, Footer.
+ * Every page renders through this.
+ */
+import '../styles/global.css';
+import Nav from '@components/Nav.astro';
+import Footer from '@components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Open Graph image path (defaults to brand share image). */
+  ogImage?: string;
+}
+
+const {
+  title = 'Midlife Unlocked — Masterclasses for divorced men over 40',
+  description = "Expert-taught video masterclasses, courses, and workshops to help men over 40 thrive after divorce. Attraction, dating, image, confidence, and the man you're becoming.",
+  ogImage = '/brand/webclip.png',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="icon" href="/brand/favicon.png" type="image/png" />
+    <meta name="theme-color" content="#0F0F11" />
+
+    <!-- Preload the display weight to cut hero text FOUT -->
+    <link rel="preload" href="/fonts/THICCCBOI-Bold.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main"><slot /></main>
+    <Footer />
+
+    <style>
+      .skip-link {
+        position: absolute;
+        left: var(--mu-space-4);
+        top: -100%;
+        z-index: var(--mu-z-overlay);
+        padding: var(--mu-space-3) var(--mu-space-4);
+        background: var(--mu-amber);
+        color: var(--mu-on-accent);
+        font-weight: var(--mu-weight-bold);
+        border-radius: var(--mu-radius-sm);
+        transition: top var(--mu-dur) var(--mu-ease);
+      }
+      .skip-link:focus { top: var(--mu-space-4); color: var(--mu-on-accent); }
+    </style>
+  </body>
+</html>

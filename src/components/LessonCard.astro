@@ -1,0 +1,158 @@
+---
+/**
+ * LessonCard — a single masterclass/lesson tile.
+ *
+ * The lock badge is the brand signature AND a true structural signal: `access`
+ * reflects the entitlement model (free core vs. premium), not decoration. When
+ * the real entitlement layer is wired, `access` comes from `canAccessLesson`.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  category: string;
+  instructor?: string;
+  thumbnail: string;
+  href?: string;
+  duration?: string;
+  access: 'free' | 'premium';
+}
+
+const {
+  title,
+  category,
+  instructor,
+  thumbnail,
+  href = '#',
+  duration,
+  access,
+} = Astro.props;
+
+const isFree = access === 'free';
+---
+
+<article class="lesson">
+  <a class="lesson__link" href={href} aria-label={title}>
+    <div class="lesson__media">
+      <img class="lesson__img" src={thumbnail} alt="" loading="lazy" width="1280" height="720" />
+      <span class:list={['lesson__badge', isFree ? 'is-free' : 'is-premium']}>
+        <Icon name={isFree ? 'unlock' : 'lock'} size={13} />
+        {isFree ? 'Free' : 'Premium'}
+      </span>
+      {duration && <span class="lesson__duration">{duration}</span>}
+      <span class="lesson__play"><Icon name="play" size={18} /></span>
+    </div>
+    <div class="lesson__body">
+      <span class="lesson__category">{category}</span>
+      <h3 class="lesson__title">{title}</h3>
+      {instructor && <p class="lesson__meta">with {instructor}</p>}
+    </div>
+  </a>
+</article>
+
+<style>
+  .lesson {
+    background: var(--mu-ink-3);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-lg);
+    overflow: hidden;
+    transition:
+      transform var(--mu-dur) var(--mu-ease),
+      border-color var(--mu-dur) var(--mu-ease),
+      box-shadow var(--mu-dur) var(--mu-ease);
+  }
+  .lesson:hover {
+    transform: translateY(-4px);
+    border-color: var(--mu-line);
+    box-shadow: var(--mu-shadow);
+  }
+
+  .lesson__link { display: block; color: inherit; }
+  .lesson__link:hover { color: inherit; }
+
+  .lesson__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--mu-ink-4);
+    overflow: hidden;
+  }
+  .lesson__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--mu-dur-slow) var(--mu-ease);
+  }
+  .lesson:hover .lesson__img { transform: scale(1.05); }
+
+  .lesson__badge {
+    position: absolute;
+    top: var(--mu-space-3);
+    left: var(--mu-space-3);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    font-size: var(--mu-text-xs);
+    font-weight: var(--mu-weight-bold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: var(--mu-radius-pill);
+    backdrop-filter: blur(6px);
+  }
+  .lesson__badge.is-free {
+    color: var(--mu-on-accent);
+    background: var(--mu-amber);
+  }
+  .lesson__badge.is-premium {
+    color: var(--mu-fog);
+    background: rgba(15, 15, 17, 0.72);
+    border: 1px solid var(--mu-line);
+  }
+
+  .lesson__duration {
+    position: absolute;
+    bottom: var(--mu-space-3);
+    right: var(--mu-space-3);
+    padding: 3px 8px;
+    font-size: var(--mu-text-xs);
+    font-weight: var(--mu-weight-medium);
+    color: var(--mu-fog);
+    background: rgba(15, 15, 17, 0.72);
+    border-radius: var(--mu-radius-sm);
+  }
+
+  .lesson__play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 52px; height: 52px;
+    display: grid;
+    place-items: center;
+    color: var(--mu-on-accent);
+    background: var(--mu-amber);
+    border-radius: var(--mu-radius-pill);
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity var(--mu-dur) var(--mu-ease), transform var(--mu-dur) var(--mu-ease);
+  }
+  .lesson:hover .lesson__play { opacity: 1; transform: scale(1); }
+
+  .lesson__body { padding: var(--mu-space-4) var(--mu-space-5) var(--mu-space-5); }
+  .lesson__category {
+    color: var(--mu-amber);
+    font-size: var(--mu-text-xs);
+    font-weight: var(--mu-weight-bold);
+    letter-spacing: var(--mu-tracking-label);
+    text-transform: uppercase;
+  }
+  .lesson__title {
+    font-size: var(--mu-text-xl);
+    margin-top: var(--mu-space-2);
+    line-height: var(--mu-leading-snug);
+  }
+  .lesson__meta {
+    margin-top: var(--mu-space-2);
+    color: var(--mu-mute);
+    font-size: var(--mu-text-sm);
+  }
+</style>

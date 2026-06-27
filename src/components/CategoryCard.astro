@@ -1,0 +1,77 @@
+---
+/**
+ * CategoryCard — a lesson category entry point. Compact, type-led tile with a
+ * lesson count and a hover reveal. No imagery required, so the category grid
+ * stays fast and uniform.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  name: string;
+  count: number;
+  href?: string;
+  /** two-digit index used as a quiet structural marker */
+  index?: number;
+}
+
+const { name, count, href = '#', index } = Astro.props;
+const marker = index != null ? String(index).padStart(2, '0') : undefined;
+---
+
+<a class="cat" href={href}>
+  {marker && <span class="cat__marker">{marker}</span>}
+  <span class="cat__body">
+    <span class="cat__name">{name}</span>
+    <span class="cat__count">{count} lessons</span>
+  </span>
+  <span class="cat__arrow"><Icon name="arrow-right" size={18} /></span>
+</a>
+
+<style>
+  .cat {
+    display: flex;
+    align-items: center;
+    gap: var(--mu-space-4);
+    padding: var(--mu-space-5);
+    color: var(--mu-white);
+    background: var(--mu-ink-3);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius);
+    transition:
+      background-color var(--mu-dur) var(--mu-ease),
+      border-color var(--mu-dur) var(--mu-ease),
+      transform var(--mu-dur) var(--mu-ease);
+  }
+  .cat:hover {
+    color: var(--mu-white);
+    background: var(--mu-ink-4);
+    border-color: var(--mu-amber);
+    transform: translateY(-3px);
+  }
+
+  .cat__marker {
+    font-family: var(--mu-font-mono);
+    font-size: var(--mu-text-sm);
+    font-weight: var(--mu-weight-bold);
+    color: var(--mu-faint);
+    transition: color var(--mu-dur) var(--mu-ease);
+  }
+  .cat:hover .cat__marker { color: var(--mu-amber); }
+
+  .cat__body { display: grid; gap: 2px; margin-right: auto; }
+  .cat__name {
+    font-family: var(--mu-font-display);
+    font-size: var(--mu-text-lg);
+    font-weight: var(--mu-weight-bold);
+    letter-spacing: -0.01em;
+  }
+  .cat__count {
+    font-size: var(--mu-text-xs);
+    color: var(--mu-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .cat__arrow { color: var(--mu-faint); transition: transform var(--mu-dur) var(--mu-ease), color var(--mu-dur) var(--mu-ease); }
+  .cat:hover .cat__arrow { color: var(--mu-amber); transform: translateX(3px); }
+</style>

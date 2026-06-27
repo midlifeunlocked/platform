@@ -1,0 +1,11 @@
+{
+  // Cloudflare Pages config for Midlife Unlocked.
+  // `pages_build_output_dir` lets `wrangler pages deploy` and the Pages Git
+  // integration find the Astro build output. Bindings (KV, D1, Stream, secrets)
+  // get added here as later phases need them.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "midlife-unlocked",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": "./dist"
+}

@@ -1,0 +1,157 @@
+/* =============================================================================
+   Midlife Unlocked — Global base
+   Fonts, reset, base typography, and a few shared primitives. Component-level
+   styles live with their components; this file only sets the foundation.
+   ============================================================================= */
+
+@import './tokens.css';
+
+/* ---- Brand typeface (THICCCBOI, self-hosted) ----------------------------- */
+@font-face {
+  font-family: 'Thicccboi';
+  src: url('/fonts/THICCCBOI-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thicccboi';
+  src: url('/fonts/THICCCBOI-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thicccboi';
+  src: url('/fonts/THICCCBOI-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- Reset --------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--mu-ink-4) var(--mu-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  background-color: var(--mu-ink);
+  color: var(--mu-fog);
+  font-family: var(--mu-font-body);
+  font-size: var(--mu-text-base);
+  font-weight: var(--mu-weight-regular);
+  line-height: var(--mu-leading-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+/* ---- Headings ------------------------------------------------------------ */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--mu-white);
+  font-family: var(--mu-font-display);
+  font-weight: var(--mu-weight-bold);
+  line-height: var(--mu-leading-tight);
+  letter-spacing: var(--mu-tracking-tight);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--mu-text-4xl); }
+h2 { font-size: var(--mu-text-3xl); }
+h3 { font-size: var(--mu-text-2xl); letter-spacing: -0.01em; }
+h4 { font-size: var(--mu-text-xl); letter-spacing: -0.01em; }
+
+p { text-wrap: pretty; }
+
+a {
+  color: var(--mu-white);
+  text-decoration: none;
+  transition: color var(--mu-dur) var(--mu-ease);
+}
+a:hover { color: var(--mu-amber); }
+
+img, svg, video { display: block; max-width: 100%; }
+img { height: auto; }
+
+ul, ol { list-style: none; }
+
+strong { color: var(--mu-white); font-weight: var(--mu-weight-bold); }
+
+::selection {
+  background: var(--mu-amber);
+  color: var(--mu-on-accent);
+}
+
+/* ---- Focus (keyboard only, visible) -------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--mu-amber);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---- Shared layout primitives -------------------------------------------- */
+.mu-container {
+  width: 100%;
+  max-width: var(--mu-container);
+  margin-inline: auto;
+  padding-inline: var(--mu-gutter);
+}
+.mu-container--wide { max-width: var(--mu-container-wide); }
+
+/* Eyebrow: the recurring structural device — uppercase label with a keyhole
+   glyph and a short amber rule. Encodes "this is a section marker", brand-tied. */
+.mu-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mu-space-2);
+  color: var(--mu-amber);
+  font-size: var(--mu-text-xs);
+  font-weight: var(--mu-weight-bold);
+  letter-spacing: var(--mu-tracking-label);
+  text-transform: uppercase;
+}
+.mu-eyebrow::after {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--mu-amber), transparent);
+}
+
+.mu-lead {
+  font-size: var(--mu-text-lg);
+  color: var(--mu-mute);
+  max-width: 56ch;
+}
+
+/* Visually hidden but accessible */
+.mu-visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

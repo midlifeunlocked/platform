@@ -1,0 +1,23 @@
+# build / deps
+node_modules/
+dist/
+.astro/
+.wrangler/
+
+# env & secrets
+.env
+.env.*
+.dev.vars
+
+# os / editor
+.DS_Store
+*.log
+npm-debug.log*
+
+# ── /reference material (kept locally, never committed) ──
+# The exported Webflow site and brand/source assets are design references,
+# not part of the shipped app. Brand assets actually used by the app are
+# copied into /public.
+midlifeunlocked.webflow/
+midlifeunlocked.webflow.zip
+~Midlife Unlocked Platform Project/

@@ -1,0 +1,120 @@
+---
+/**
+ * Button — the one button. Renders <a> when `href` is set, else <button>.
+ * Variants and sizes only; no one-off button styling anywhere else.
+ *
+ *   <Button href="/signup">Start free</Button>
+ *   <Button variant="ghost" size="sm">Log in</Button>
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'ghost' | 'solid-light';
+  size?: 'sm' | 'md' | 'lg';
+  type?: 'button' | 'submit';
+  icon?: 'arrow-right' | 'play' | 'lock' | 'unlock';
+  full?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
+  icon,
+  full = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const classes = ['btn', `btn--${variant}`, `btn--${size}`, full && 'btn--full', className]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<Tag
+  class={classes}
+  href={href}
+  type={href ? undefined : type}
+  {...rest}
+>
+  <span class="btn__label"><slot /></span>
+  {icon && <Icon name={icon} size={size === 'lg' ? 20 : 18} class="btn__icon" />}
+</Tag>
+
+<style>
+  .btn {
+    --_pad-y: var(--mu-space-3);
+    --_pad-x: var(--mu-space-5);
+    --_fs: var(--mu-text-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mu-space-2);
+    padding: var(--_pad-y) var(--_pad-x);
+    font-family: var(--mu-font-display);
+    font-size: var(--_fs);
+    font-weight: var(--mu-weight-bold);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    border-radius: var(--mu-radius-pill);
+    cursor: pointer;
+    transition:
+      background-color var(--mu-dur) var(--mu-ease),
+      border-color var(--mu-dur) var(--mu-ease),
+      color var(--mu-dur) var(--mu-ease),
+      transform var(--mu-dur) var(--mu-ease);
+  }
+
+  /* sizes */
+  .btn--sm { --_pad-y: 0.625rem; --_pad-x: 1rem;   --_fs: var(--mu-text-xs); }
+  .btn--md { --_pad-y: 0.875rem; --_pad-x: 1.5rem; --_fs: var(--mu-text-sm); }
+  .btn--lg { --_pad-y: 1.15rem;  --_pad-x: 2rem;   --_fs: var(--mu-text-lg); }
+  .btn--full { width: 100%; }
+
+  /* primary — the bronze/amber fill, used sparingly */
+  .btn--primary {
+    background: var(--mu-amber);
+    color: var(--mu-on-accent);
+  }
+  .btn--primary:hover {
+    background: var(--mu-amber-soft);
+    color: var(--mu-on-accent);
+    transform: translateY(-2px);
+  }
+
+  /* ghost — outline on dark */
+  .btn--ghost {
+    background: transparent;
+    color: var(--mu-white);
+    border-color: var(--mu-line);
+  }
+  .btn--ghost:hover {
+    color: var(--mu-amber);
+    border-color: var(--mu-amber);
+    transform: translateY(-2px);
+  }
+
+  /* solid-light — white fill for placement on imagery/dark forest */
+  .btn--solid-light {
+    background: var(--mu-white);
+    color: var(--mu-ink);
+  }
+  .btn--solid-light:hover {
+    background: var(--mu-fog);
+    transform: translateY(-2px);
+  }
+
+  .btn__icon { transition: transform var(--mu-dur) var(--mu-ease); }
+  .btn:hover .btn__icon { transform: translateX(3px); }
+  .btn--primary:hover .btn__icon,
+  .btn--solid-light:hover .btn__icon { transform: translateX(3px); }
+</style>

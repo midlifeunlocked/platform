@@ -1,0 +1,110 @@
+---
+/**
+ * Section — vertical rhythm + an optional header (eyebrow / title / intro and
+ * a trailing action like "Browse all"). One consistent section shell so pages
+ * compose instead of re-styling spacing each time.
+ *
+ *   <Section eyebrow="Free core lessons" title="Start where you are"
+ *            actionLabel="Browse all" actionHref="/categories">
+ *     ...cards...
+ *   </Section>
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  actionLabel?: string;
+  actionHref?: string;
+  /** surface tone */
+  tone?: 'ink' | 'inset' | 'forest';
+  /** center the header block */
+  centered?: boolean;
+  id?: string;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  intro,
+  actionLabel,
+  actionHref,
+  tone = 'ink',
+  centered = false,
+  id,
+  class: className,
+} = Astro.props;
+
+const hasHeader = Boolean(eyebrow || title || intro || actionLabel);
+---
+
+<section id={id} class:list={['section', `section--${tone}`, className]}>
+  <div class="mu-container">
+    {hasHeader && (
+      <header class:list={['section__head', { 'section__head--centered': centered }]}>
+        <div class="section__heading">
+          {eyebrow && <span class="mu-eyebrow">{eyebrow}</span>}
+          {title && <h2 class="section__title">{title}</h2>}
+          {intro && <p class="mu-lead section__intro">{intro}</p>}
+        </div>
+        {actionLabel && actionHref && (
+          <a class="section__action" href={actionHref}>
+            {actionLabel}
+            <Icon name="arrow-right" size={16} />
+          </a>
+        )}
+      </header>
+    )}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--mu-section-y);
+  }
+  .section--inset { background: var(--mu-ink-2); }
+  .section--forest {
+    background: var(--mu-forest);
+    border-block: 1px solid var(--mu-forest-line);
+  }
+
+  .section__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--mu-space-5);
+    margin-bottom: var(--mu-space-7);
+  }
+  .section__head--centered {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .section__heading { display: grid; gap: var(--mu-space-3); }
+  .section__title { font-size: var(--mu-text-3xl); }
+  .section__intro { margin-top: var(--mu-space-1); }
+
+  .section__action {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mu-space-2);
+    flex-shrink: 0;
+    color: var(--mu-mute);
+    font-size: var(--mu-text-sm);
+    font-weight: var(--mu-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-bottom: 0.4rem;
+    transition: color var(--mu-dur) var(--mu-ease);
+  }
+  .section__action :global(svg) { transition: transform var(--mu-dur) var(--mu-ease); }
+  .section__action:hover { color: var(--mu-amber); }
+  .section__action:hover :global(svg) { transform: translateX(3px); }
+
+  @media (max-width: 640px) {
+    .section__head { flex-direction: column; align-items: flex-start; }
+  }
+</style>

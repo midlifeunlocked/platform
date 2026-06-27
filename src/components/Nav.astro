@@ -1,0 +1,150 @@
+---
+/**
+ * Nav — sticky top navigation. White wordmark, public links, and the two
+ * primary auth actions. Mobile collapses to a toggled panel (progressive
+ * enhancement: the links are real anchors with or without JS).
+ */
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+const links = [
+  { label: 'Categories', href: '/categories' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Instructors', href: '/instructors' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+---
+
+<header class="nav" data-nav>
+  <div class="mu-container mu-container--wide nav__inner">
+    <a class="nav__brand" href="/" aria-label="Midlife Unlocked — home">
+      <img src="/brand/logo-wordmark-white.png" alt="Midlife Unlocked" height="26" />
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      {links.map((l) => (
+        <a href={l.href} class:list={['nav__link', { 'is-active': isActive(l.href) }]}>{l.label}</a>
+      ))}
+    </nav>
+
+    <div class="nav__actions">
+      <a class="nav__login" href="/login">Log in</a>
+      <Button href="/signup" size="sm" icon="arrow-right">Start free</Button>
+    </div>
+
+    <button class="nav__toggle" data-nav-toggle aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile">
+      <Icon name="menu" size={24} />
+    </button>
+  </div>
+
+  <div class="nav__mobile" id="nav-mobile" data-nav-mobile hidden>
+    <nav class="nav__mobile-links" aria-label="Mobile">
+      {links.map((l) => <a href={l.href} class="nav__mobile-link">{l.label}</a>)}
+      <a href="/login" class="nav__mobile-link">Log in</a>
+    </nav>
+    <Button href="/signup" full icon="arrow-right">Start free</Button>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: var(--mu-z-nav);
+    background: color-mix(in srgb, var(--mu-ink) 82%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--mu-line-soft);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--mu-space-5);
+    height: 72px;
+  }
+  .nav__brand { flex-shrink: 0; }
+  .nav__brand img { height: 26px; width: auto; }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--mu-space-6);
+    margin-inline: auto;
+  }
+  .nav__link {
+    color: var(--mu-mute);
+    font-size: var(--mu-text-sm);
+    font-weight: var(--mu-weight-medium);
+    transition: color var(--mu-dur) var(--mu-ease);
+  }
+  .nav__link:hover { color: var(--mu-white); }
+  .nav__link.is-active { color: var(--mu-white); }
+
+  .nav__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--mu-space-4);
+    flex-shrink: 0;
+  }
+  .nav__login {
+    color: var(--mu-fog);
+    font-size: var(--mu-text-sm);
+    font-weight: var(--mu-weight-bold);
+  }
+  .nav__login:hover { color: var(--mu-amber); }
+
+  .nav__toggle {
+    display: none;
+    margin-left: auto;
+    color: var(--mu-white);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--mu-space-2);
+  }
+
+  .nav__mobile {
+    border-top: 1px solid var(--mu-line-soft);
+    padding: var(--mu-space-5) var(--mu-gutter) var(--mu-space-6);
+    display: grid;
+    gap: var(--mu-space-5);
+  }
+  .nav__mobile[hidden] { display: none; }
+  .nav__mobile-links { display: grid; gap: var(--mu-space-1); }
+  .nav__mobile-link {
+    color: var(--mu-fog);
+    font-family: var(--mu-font-display);
+    font-size: var(--mu-text-lg);
+    font-weight: var(--mu-weight-bold);
+    padding-block: var(--mu-space-3);
+    border-bottom: 1px solid var(--mu-line-soft);
+  }
+  .nav__mobile-link:hover { color: var(--mu-amber); }
+
+  @media (max-width: 900px) {
+    .nav__links, .nav__actions { display: none; }
+    .nav__toggle { display: inline-flex; }
+  }
+</style>
+
+<script>
+  // Mobile menu toggle. Enhancement only — links work without it.
+  const root = document.querySelector('[data-nav]');
+  const toggle = root?.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const panel = root?.querySelector<HTMLElement>('[data-nav-mobile]');
+
+  toggle?.addEventListener('click', () => {
+    const open = panel?.hasAttribute('hidden');
+    if (open) {
+      panel?.removeAttribute('hidden');
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Close menu');
+    } else {
+      panel?.setAttribute('hidden', '');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+    }
+  });
+</script>

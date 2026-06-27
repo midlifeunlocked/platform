@@ -1,0 +1,56 @@
+---
+/**
+ * Inline SVG icon set. Small, currentColor-driven, no icon-font dependency.
+ * The lock/unlock pair is the brand's structural signature (free vs. premium).
+ */
+type IconName =
+  | 'lock'
+  | 'unlock'
+  | 'arrow-right'
+  | 'play'
+  | 'check'
+  | 'menu'
+  | 'close';
+
+interface Props {
+  name: IconName;
+  size?: number;
+  class?: string;
+  'aria-hidden'?: boolean;
+}
+
+const { name, size = 20, class: className, ...rest } = Astro.props;
+const sw = 1.75;
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={sw}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  {...rest}
+>
+  {name === 'lock' && (
+    <>
+      <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" />
+      <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
+    </>
+  )}
+  {name === 'unlock' && (
+    <>
+      <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" />
+      <path d="M8 10.5V7.5a4 4 0 0 1 7.7-1.6" />
+    </>
+  )}
+  {name === 'arrow-right' && <path d="M5 12h14M13 6l6 6-6 6" />}
+  {name === 'play' && <path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor" stroke="none" />}
+  {name === 'check' && <path d="M5 12.5l4.5 4.5L19 7" />}
+  {name === 'menu' && <path d="M4 7h16M4 12h16M4 17h16" />}
+  {name === 'close' && <path d="M6 6l12 12M18 6L6 18" />}
+</svg>

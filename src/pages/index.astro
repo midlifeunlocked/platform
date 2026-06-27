@@ -1,0 +1,338 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Section from '@components/Section.astro';
+import Button from '@components/Button.astro';
+import Icon from '@components/Icon.astro';
+import LessonCard from '@components/LessonCard.astro';
+import CategoryCard from '@components/CategoryCard.astro';
+
+/* ---------------------------------------------------------------------------
+   Content for the homepage. Extracted from /reference (the Webflow export) and
+   the brand asset library — not its markup. Lessons/categories are sample data
+   wired to real thumbnails; in later phases this comes from Supabase, gated
+   through the entitlement layer (canAccessLesson → access).
+   ------------------------------------------------------------------------- */
+
+const categories = [
+  { name: 'Confidence', count: 12 },
+  { name: 'Dating & Attraction', count: 18 },
+  { name: 'Image & Style', count: 9 },
+  { name: 'Masculinity', count: 7 },
+  { name: 'Body Language', count: 6 },
+  { name: 'Social Status', count: 8 },
+];
+
+const freeLessons = [
+  { title: 'Command Confidence in 5 Steps', category: 'Confidence', instructor: 'Lee Lambert', thumbnail: '/thumbnails/command-confidence.png', duration: '14 min', access: 'free' as const },
+  { title: 'Make a Head-Turning First Impression', category: 'Image & Style', instructor: 'Aidan Lee', thumbnail: '/thumbnails/first-impression.png', duration: '11 min', access: 'free' as const },
+  { title: 'Read the Room: Body Language Basics', category: 'Body Language', instructor: 'Gav Gillibrand', thumbnail: '/thumbnails/body-language.png', duration: '17 min', access: 'free' as const },
+];
+
+const premiumLessons = [
+  { title: 'Outcome Independence', category: 'Masculinity', instructor: 'Lee Lambert', thumbnail: '/thumbnails/outcome-independence.png', duration: '28 min', access: 'premium' as const },
+  { title: 'Get More Matches on Dating Apps', category: 'Dating & Attraction', instructor: 'Aidan Lee', thumbnail: '/thumbnails/dating-apps.png', duration: '22 min', access: 'premium' as const },
+  { title: 'Make Her Fall For You', category: 'Dating & Attraction', instructor: 'Gav Gillibrand', thumbnail: '/thumbnails/make-her-fall.png', duration: '31 min', access: 'premium' as const },
+];
+
+const planFeatures = [
+  'Core and Premium access to every lesson',
+  'New masterclasses added every month',
+  'Taught by real experts, not influencers',
+  'Watch anywhere, cancel anytime',
+];
+---
+
+<BaseLayout>
+  <!-- ===================== HERO — the thesis ===================== -->
+  <section class="hero">
+    <div class="mu-container mu-container--wide hero__grid">
+      <div class="hero__copy">
+        <span class="mu-eyebrow"><Icon name="lock" size={13} /> Masterclasses for divorced men over 40</span>
+        <h1 class="hero__title">
+          Go after the life you've <span class="hero__accent">secretly wanted</span> all along.
+        </h1>
+        <p class="hero__lead">
+          Video masterclasses, courses, and workshops to help you thrive after divorce —
+          actionable, proven, real-world guidance built specifically for men over 40.
+        </p>
+
+        <ul class="hero__proof">
+          <li><Icon name="check" size={16} /> Taught by real experts</li>
+          <li><Icon name="check" size={16} /> Attraction · Image · Confidence · Money</li>
+          <li><Icon name="check" size={16} /> New lessons every month</li>
+        </ul>
+
+        <div class="hero__actions">
+          <Button href="/signup" size="lg" icon="arrow-right">Start free</Button>
+          <Button href="/categories#free" size="lg" variant="ghost" icon="play">Watch a free lesson</Button>
+        </div>
+        <p class="hero__signin">Already a member? <a href="/login">Log in</a>.</p>
+      </div>
+
+      <div class="hero__media">
+        <div class="hero__frame">
+          <img src="/images/reading-man.jpg" alt="A composed man in his forties, reading with intent." width="1281" height="720" />
+          <div class="hero__tag">
+            <Icon name="unlock" size={15} />
+            <div>
+              <strong>Now unlocking</strong>
+              <span>Your next chapter</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero__glow" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CATEGORIES ===================== -->
+  <Section
+    eyebrow="Explore lesson categories"
+    title="Pick a place to start"
+    actionLabel="Browse all"
+    actionHref="/categories"
+  >
+    <div class="cat-grid">
+      {categories.map((c, i) => <CategoryCard name={c.name} count={c.count} index={i + 1} href="/categories" />)}
+    </div>
+  </Section>
+
+  <!-- ===================== FREE CORE LESSONS ===================== -->
+  <Section
+    id="free"
+    tone="inset"
+    eyebrow="Free core lessons"
+    title="Open to everyone"
+    intro="A real taste of the method — no card required. Watch, then go deeper."
+    actionLabel="Browse all"
+    actionHref="/categories#free"
+  >
+    <div class="lesson-grid">
+      {freeLessons.map((l) => <LessonCard {...l} />)}
+    </div>
+  </Section>
+
+  <!-- ===================== PREMIUM LESSONS ===================== -->
+  <Section
+    id="premium"
+    eyebrow="Premium lessons"
+    title="The depth, structure, and how"
+    intro="Full masterclasses with companion workbooks — the part that actually changes things."
+    actionLabel="Browse all"
+    actionHref="/categories#premium"
+  >
+    <div class="lesson-grid">
+      {premiumLessons.map((l) => <LessonCard {...l} />)}
+    </div>
+  </Section>
+
+  <!-- ===================== PRICING TEASER ===================== -->
+  <section class="plan">
+    <div class="mu-container mu-container--wide">
+      <div class="plan__card">
+        <div class="plan__copy">
+          <span class="mu-eyebrow"><Icon name="unlock" size={13} /> All-access pass</span>
+          <h2 class="plan__title">
+            Thrive after divorce for as little as
+            <span class="plan__price">$14.92</span><span class="plan__per">/month</span>
+          </h2>
+          <p class="plan__sub">
+            Upgrade to Premium and unlock every lesson Midlife Unlocked has to offer —
+            billed annually, cancel anytime.
+          </p>
+          <div class="plan__actions">
+            <Button href="/pricing" size="lg" icon="arrow-right">See pricing</Button>
+            <Button href="/signup" size="lg" variant="solid-light">Start free first</Button>
+          </div>
+        </div>
+        <ul class="plan__features">
+          {planFeatures.map((f) => (
+            <li><span class="plan__check"><Icon name="check" size={15} /></span>{f}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---- Hero ---- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--mu-line-soft);
+    background:
+      radial-gradient(120% 80% at 85% -10%, rgba(255, 158, 44, 0.10), transparent 60%),
+      var(--mu-ink);
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: center;
+    gap: var(--mu-space-8);
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+  }
+  .hero__title {
+    font-size: var(--mu-text-4xl);
+    margin-top: var(--mu-space-5);
+    line-height: 1.04;
+    overflow-wrap: break-word;
+  }
+  .hero__accent {
+    color: var(--mu-amber);
+    position: relative;
+    white-space: nowrap;
+  }
+  @media (max-width: 560px) {
+    .hero__accent { white-space: normal; }
+  }
+  .hero__accent::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0.04em;
+    height: 0.08em;
+    background: var(--mu-bronze);
+    opacity: 0.5;
+  }
+  .hero__lead {
+    margin-top: var(--mu-space-5);
+    font-size: var(--mu-text-lg);
+    color: var(--mu-fog);
+    max-width: 52ch;
+  }
+  .hero__proof {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mu-space-3) var(--mu-space-5);
+    margin-top: var(--mu-space-5);
+  }
+  .hero__proof li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mu-space-2);
+    color: var(--mu-mute);
+    font-size: var(--mu-text-sm);
+    font-weight: var(--mu-weight-medium);
+  }
+  .hero__proof :global(svg) { color: var(--mu-amber); flex-shrink: 0; }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mu-space-4);
+    margin-top: var(--mu-space-6);
+  }
+  .hero__signin {
+    margin-top: var(--mu-space-4);
+    color: var(--mu-mute);
+    font-size: var(--mu-text-sm);
+  }
+  .hero__signin a { color: var(--mu-amber); font-weight: var(--mu-weight-bold); }
+
+  /* Hero media */
+  .hero__media { position: relative; }
+  .hero__frame {
+    position: relative;
+    z-index: 1;
+    border: 1px solid var(--mu-line);
+    border-radius: var(--mu-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--mu-shadow-lg);
+    aspect-ratio: 4 / 3.2;
+  }
+  .hero__frame img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__tag {
+    position: absolute;
+    left: var(--mu-space-4);
+    bottom: var(--mu-space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--mu-space-3);
+    padding: var(--mu-space-3) var(--mu-space-4);
+    background: rgba(15, 15, 17, 0.78);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--mu-line);
+    border-radius: var(--mu-radius);
+    color: var(--mu-amber);
+  }
+  .hero__tag div { display: grid; line-height: 1.2; }
+  .hero__tag strong { color: var(--mu-white); font-size: var(--mu-text-sm); }
+  .hero__tag span { color: var(--mu-mute); font-size: var(--mu-text-xs); }
+  .hero__glow {
+    position: absolute;
+    inset: -10% -10% -20% 10%;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(255, 158, 44, 0.18), transparent 70%);
+    filter: blur(20px);
+    z-index: 0;
+  }
+
+  /* ---- Category grid ---- */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--mu-space-4);
+  }
+
+  /* ---- Lesson grid ---- */
+  .lesson-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--mu-space-5);
+  }
+
+  /* ---- Plan / pricing teaser ---- */
+  .plan { padding-block: var(--mu-section-y); }
+  .plan__card {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--mu-space-8);
+    align-items: center;
+    padding: clamp(2rem, 4vw, 3.5rem);
+    background:
+      radial-gradient(90% 120% at 100% 0%, rgba(255, 158, 44, 0.10), transparent 55%),
+      var(--mu-forest);
+    border: 1px solid var(--mu-forest-line);
+    border-radius: var(--mu-radius-lg);
+  }
+  .plan__title {
+    margin-top: var(--mu-space-4);
+    font-size: var(--mu-text-3xl);
+    line-height: 1.12;
+  }
+  .plan__price { color: var(--mu-amber); }
+  .plan__per { color: var(--mu-mute); font-size: 0.6em; font-weight: var(--mu-weight-medium); }
+  .plan__sub { margin-top: var(--mu-space-4); color: var(--mu-fog); max-width: 46ch; }
+  .plan__actions { display: flex; flex-wrap: wrap; gap: var(--mu-space-4); margin-top: var(--mu-space-6); }
+
+  .plan__features { display: grid; gap: var(--mu-space-4); }
+  .plan__features li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--mu-space-3);
+    color: var(--mu-fog);
+    font-weight: var(--mu-weight-medium);
+  }
+  .plan__check {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 26px; height: 26px;
+    margin-top: 1px;
+    color: var(--mu-on-accent);
+    background: var(--mu-amber);
+    border-radius: var(--mu-radius-pill);
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 1000px) {
+    .hero__grid { grid-template-columns: 1fr; }
+    .hero__media { order: -1; max-width: 520px; }
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+    .lesson-grid { grid-template-columns: repeat(2, 1fr); }
+    .plan__card { grid-template-columns: 1fr; gap: var(--mu-space-6); }
+  }
+  @media (max-width: 620px) {
+    .cat-grid { grid-template-columns: 1fr; }
+    .lesson-grid { grid-template-columns: 1fr; }
+  }
+</style>
