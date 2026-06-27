@@ -79,10 +79,11 @@ const { name, count, image, href = '#', portrait = false, ...rest } = Astro.prop
   }
   .cat__name {
     font-family: var(--mu-font-display);
-    font-size: var(--mu-text-xl);
+    font-size: var(--mu-text-3xl);
     font-weight: var(--mu-weight-bold);
     letter-spacing: var(--mu-tracking-tight);
-    line-height: 1.1;
+    line-height: 1.02;
+    text-wrap: balance;
   }
   .cat__count {
     font-size: var(--mu-text-xs);
