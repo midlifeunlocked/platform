@@ -20,7 +20,7 @@ const taught = lessonsByInstructor(instructor.slug);
 >
   <section class="bio">
     <div class="mu-container bio__inner">
-      <img class="bio__photo" src={instructor.photo} alt={instructor.name} width="200" height="200" data-reveal />
+      <img class="bio__photo" src={instructor.portrait} alt={instructor.name} width="320" height="427" data-reveal />
       <div class="bio__body" data-reveal style="--reveal-delay:90ms">
         <a class="bio__back" href="/instructors">← All instructors</a>
         <span class="bio__role">{instructor.role}</span>
@@ -55,12 +55,15 @@ const taught = lessonsByInstructor(instructor.slug);
       radial-gradient(70% 120% at 100% 0%, rgba(164, 97, 51, 0.12), transparent 55%),
       var(--mu-bg);
   }
-  .bio__inner { display: grid; grid-template-columns: auto 1fr; gap: var(--mu-space-8); align-items: center; }
+  .bio__inner { display: grid; grid-template-columns: auto 1fr; gap: var(--mu-space-8); align-items: start; }
   .bio__photo {
-    width: 180px; height: 180px;
+    width: clamp(240px, 26vw, 320px);
+    aspect-ratio: 3 / 4;
+    height: auto;
     border-radius: var(--mu-radius-lg);
     object-fit: cover;
     border: 1px solid var(--mu-line);
+    box-shadow: var(--mu-shadow);
   }
   .bio__back { color: var(--mu-mute); font-size: var(--mu-text-sm); font-weight: var(--mu-weight-bold); }
   .bio__back:hover { color: var(--mu-bronze-soft); }
