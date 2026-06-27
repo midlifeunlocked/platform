@@ -12,12 +12,15 @@ interface Props {
   description?: string;
   /** Open Graph image path (defaults to brand share image). */
   ogImage?: string;
+  /** Keep the page out of search indexes (auth, utility, error pages). */
+  noindex?: boolean;
 }
 
 const {
   title = 'Midlife Unlocked - Masterclasses for Divorced Men Over 40',
   description = 'We make it nearly impossible for divorced guys over 40 to fail at becoming irresistible to beautiful, supportive, feminine women — without sleazy manosphere red-pill nonsense, even if you’re fat, bald, short, and average-looking.',
   ogImage = '/brand/og.png',
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
@@ -33,6 +36,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).hr
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
 
     <link rel="icon" href="/brand/favicon.png" type="image/png" />

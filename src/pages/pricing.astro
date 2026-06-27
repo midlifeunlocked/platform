@@ -36,6 +36,13 @@ const tiers = [
   },
 ];
 
+const highlights = [
+  { icon: 'play', title: 'Every masterclass', body: 'Full courses, workshops, and masterclasses across all six categories — not clips, the complete method.' },
+  { icon: 'check', title: 'Companion workbooks', body: 'Downloadable workbooks and assets so the lessons turn into real change, not just watch-time.' },
+  { icon: 'unlock', title: 'New every month', body: 'Fresh masterclasses added monthly from instructors who have actually lived the second chapter.' },
+  { icon: 'arrow-right', title: 'Cancel anytime', body: 'No lock-in. Manage or cancel in a couple of clicks and keep access through your billing period.' },
+] as const;
+
 const faqs = [
   { q: 'How does billing work?', a: 'Premium is billed annually, which works out to as little as $14.92 per month. You get instant access to the entire catalogue the moment you join.' },
   { q: 'Can I cancel at any time?', a: 'Yes — cancel in a couple of clicks from your account. You keep Premium access until the end of your billing period.' },
@@ -56,6 +63,18 @@ const faqs = [
   />
 
   <Section>
+    <div class="highlights">
+      {highlights.map((h, i) => (
+        <div class="hl" data-reveal style={`--reveal-delay:${i * 70}ms`}>
+          <span class="hl__icon"><Icon name={h.icon} size={20} /></span>
+          <h3 class="hl__title">{h.title}</h3>
+          <p class="hl__body">{h.body}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <Section tone="inset">
     <div class="tiers">
       {tiers.map((t, i) => (
         <div class:list={['tier', { 'tier--featured': t.highlight }]} data-reveal style={`--reveal-delay:${i * 90}ms`}>
@@ -82,6 +101,33 @@ const faqs = [
 </BaseLayout>
 
 <style>
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--mu-space-5);
+  }
+  .hl {
+    padding: var(--mu-space-6);
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius-lg);
+  }
+  .hl__icon {
+    display: grid;
+    place-items: center;
+    width: 44px; height: 44px;
+    margin-bottom: var(--mu-space-4);
+    color: var(--mu-bronze-soft);
+    background: var(--mu-surface-3);
+    border: 1px solid var(--mu-line);
+    border-radius: var(--mu-radius);
+  }
+  .hl__title { font-size: var(--mu-text-lg); }
+  .hl__body { margin-top: var(--mu-space-2); color: var(--mu-mute); font-size: var(--mu-text-sm); }
+
+  @media (max-width: 900px) { .highlights { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .highlights { grid-template-columns: 1fr; } }
+
   .tiers {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
