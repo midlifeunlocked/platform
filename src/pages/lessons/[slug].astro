@@ -13,8 +13,9 @@ export function getStaticPaths() {
 }
 
 const { lesson } = Astro.props;
-const lessonInstructors = lesson.instructorSlugs.map(getInstructor).filter(Boolean);
-const instructor = lessonInstructors[0];
+const lessonInstructors = lesson.instructorSlugs
+  .map(getInstructor)
+  .filter((i): i is NonNullable<typeof i> => Boolean(i));
 const credit = instructorNames(lesson.instructorSlugs);
 const course = getCourse(lesson.courseSlug);
 const courseSiblings = course ? lessonsByCourse(course.slug).filter((l) => l.slug !== lesson.slug) : [];
@@ -89,14 +90,18 @@ const playerSrc = lesson.streamId ? `https://${STREAM_CUSTOMER}/${lesson.streamI
               <div><dt>Access</dt><dd>{isFree ? 'Free' : 'Premium'}</dd></div>
             </dl>
           </div>
-          {instructor && (
-            <InstructorCard
-              name={instructor.name}
-              role={instructor.role}
-              photo={instructor.photo}
-              specialties={instructor.specialties}
-              href={`/instructors/${instructor.slug}`}
-            />
+          {lessonInstructors.length > 0 && (
+            <div class="detail__instructors">
+              {lessonInstructors.map((ins) => (
+                <InstructorCard
+                  name={ins.name}
+                  role={ins.role}
+                  photo={ins.photo}
+                  specialties={ins.specialties}
+                  href={`/instructors/${ins.slug}`}
+                />
+              ))}
+            </div>
           )}
         </aside>
       </div>
@@ -193,6 +198,7 @@ const playerSrc = lesson.streamId ? `https://${STREAM_CUSTOMER}/${lesson.streamI
 
   /* ---- Content ---- */
   .detail { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--mu-space-8); align-items: start; }
+  .detail__instructors { display: grid; gap: var(--mu-space-4); }
   .detail__h { font-size: var(--mu-text-xl); margin-bottom: var(--mu-space-5); }
   .detail__lead { font-size: var(--mu-text-lg); color: var(--mu-fog); }
 
