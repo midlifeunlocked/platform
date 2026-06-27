@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 
 // Midlife Unlocked — Astro + React islands, deployed to Cloudflare Pages.
 //
@@ -18,5 +19,5 @@ import react from '@astrojs/react';
 export default defineConfig({
   site: 'https://midlifeunlocked.com',
   output: 'static',
-  integrations: [react()],
+  integrations: [react(), sitemap()],
 });

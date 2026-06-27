@@ -14,7 +14,7 @@ const { variant, label = 'items', ...rest } = Astro.props;
 ---
 
 <div class="carousel" data-carousel {...rest}>
-  <div class={`mu-row mu-row--${variant}`} data-carousel-row tabindex="0">
+  <div class={`mu-row mu-row--${variant}`} data-carousel-row>
     <slot />
   </div>
   <button type="button" class="carousel__arrow carousel__arrow--prev" data-carousel-prev aria-label={`Scroll ${label} left`} hidden>
@@ -33,7 +33,6 @@ const { variant, label = 'items', ...rest } = Astro.props;
   }
   /* the row no longer bleeds itself — the carousel owns it */
   .carousel .mu-row { margin-right: 0; padding-right: 0; }
-  .carousel .mu-row:focus-visible { outline: none; }
 
   .carousel__arrow {
     position: absolute;
@@ -85,9 +84,11 @@ const { variant, label = 'items', ...rest } = Astro.props;
       prev.hidden = row.scrollLeft <= 0;
       next.hidden = row.scrollLeft >= max;
     };
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const behavior: ScrollBehavior = reduce ? 'auto' : 'smooth';
     const page = () => Math.max(240, row.clientWidth * RATIO);
-    prev.addEventListener('click', () => row.scrollBy({ left: -page(), behavior: 'smooth' }));
-    next.addEventListener('click', () => row.scrollBy({ left: page(), behavior: 'smooth' }));
+    prev.addEventListener('click', () => row.scrollBy({ left: -page(), behavior }));
+    next.addEventListener('click', () => row.scrollBy({ left: page(), behavior }));
     row.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
