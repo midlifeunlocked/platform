@@ -5,14 +5,17 @@ import LessonCard from '@components/LessonCard.astro';
 import InstructorCard from '@components/InstructorCard.astro';
 import Button from '@components/Button.astro';
 import Icon from '@components/Icon.astro';
-import { lessons, getInstructor, relatedLessons, toCardProps } from '@/data/catalog';
+import { lessons, getInstructor, getCourse, instructorNames, relatedLessons, toCardProps } from '@/data/catalog';
 
 export function getStaticPaths() {
   return lessons.map((lesson) => ({ params: { slug: lesson.slug }, props: { lesson } }));
 }
 
 const { lesson } = Astro.props;
-const instructor = getInstructor(lesson.instructorSlug);
+const lessonInstructors = lesson.instructorSlugs.map(getInstructor).filter(Boolean);
+const instructor = lessonInstructors[0]; // primary, for the sidebar card
+const credit = instructorNames(lesson.instructorSlugs);
+const course = getCourse(lesson.courseSlug);
 const related = relatedLessons(lesson, 3);
 
 /*
@@ -66,11 +69,12 @@ const unlocked = lesson.access === 'free';
               <Icon name={unlocked ? 'unlock' : 'lock'} size={13} />
               {unlocked ? 'Free' : 'Premium'}
             </span>
-            <span class="detail__duration">{lesson.duration}</span>
+            {lesson.duration && <span class="detail__duration">{lesson.duration}</span>}
+            {course && <span class="detail__duration">Part of {course.name}</span>}
           </div>
           <h1 class="detail__title">{lesson.title}</h1>
-          <p class="detail__desc">{lesson.description}</p>
-          {instructor && <p class="detail__by">Taught by <a href={`/instructors/${instructor.slug}`}>{instructor.name}</a> · {instructor.role}</p>}
+          {lesson.description && <p class="detail__desc">{lesson.description}</p>}
+          {credit && <p class="detail__by">Taught by <span class="detail__credit">{credit}</span></p>}
 
           {!unlocked && (
             <div class="detail__cta">
@@ -177,7 +181,7 @@ const unlocked = lesson.access === 'free';
   .detail__title { margin-top: var(--mu-space-4); font-size: var(--mu-text-3xl); }
   .detail__desc { margin-top: var(--mu-space-4); font-size: var(--mu-text-lg); color: var(--mu-fog); max-width: 60ch; }
   .detail__by { margin-top: var(--mu-space-4); color: var(--mu-mute); }
-  .detail__by a { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
+  .detail__credit { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
   .detail__cta { display: flex; flex-wrap: wrap; gap: var(--mu-space-4); margin-top: var(--mu-space-6); }
 
   @media (max-width: 860px) {

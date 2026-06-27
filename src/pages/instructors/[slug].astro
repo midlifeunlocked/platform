@@ -3,14 +3,14 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Section from '@components/Section.astro';
 import LessonCard from '@components/LessonCard.astro';
 import Button from '@components/Button.astro';
-import { instructors, lessons, toCardProps } from '@/data/catalog';
+import { instructors, lessonsByInstructor, toCardProps } from '@/data/catalog';
 
 export function getStaticPaths() {
   return instructors.map((instructor) => ({ params: { slug: instructor.slug }, props: { instructor } }));
 }
 
 const { instructor } = Astro.props;
-const taught = lessons.filter((l) => l.instructorSlug === instructor.slug);
+const taught = lessonsByInstructor(instructor.slug);
 ---
 
 <BaseLayout
@@ -36,10 +36,14 @@ const taught = lessons.filter((l) => l.instructorSlug === instructor.slug);
     </div>
   </section>
 
-  <Section tone="inset" eyebrow={`${taught.length} ${taught.length === 1 ? 'lesson' : 'lessons'}`} title={`Lessons by ${instructor.name}`}>
-    <div class="lesson-grid">
-      {taught.map((l, i) => <LessonCard {...toCardProps(l)} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
-    </div>
+  <Section tone="inset" eyebrow={taught.length ? `${taught.length} ${taught.length === 1 ? 'lesson' : 'lessons'}` : 'Coming soon'} title={`Lessons by ${instructor.name}`}>
+    {taught.length ? (
+      <div class="lesson-grid">
+        {taught.map((l, i) => <LessonCard {...toCardProps(l)} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
+      </div>
+    ) : (
+      <p class="empty" data-reveal>Masterclasses from {instructor.name} are on the way. In the meantime, <a href="/categories">browse the catalogue</a>.</p>
+    )}
   </Section>
 </BaseLayout>
 
@@ -81,6 +85,8 @@ const taught = lessons.filter((l) => l.instructorSlug === instructor.slug);
     border-radius: var(--mu-radius-pill);
   }
   .bio__actions { margin-top: var(--mu-space-6); }
+  .empty { color: var(--mu-mute); }
+  .empty a { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
 
   @media (max-width: 720px) {
     .bio__inner { grid-template-columns: 1fr; gap: var(--mu-space-5); }
