@@ -36,7 +36,7 @@ const marker = index != null ? String(index).padStart(2, '0') : undefined;
     gap: var(--mu-space-4);
     padding: var(--mu-space-5);
     color: var(--mu-white);
-    background: var(--mu-ink-3);
+    background: var(--mu-surface-2);
     border: 1px solid var(--mu-line-soft);
     border-radius: var(--mu-radius);
     transition:
@@ -46,8 +46,8 @@ const marker = index != null ? String(index).padStart(2, '0') : undefined;
   }
   .cat:hover {
     color: var(--mu-white);
-    background: var(--mu-ink-4);
-    border-color: var(--mu-amber);
+    background: var(--mu-surface-3);
+    border-color: var(--mu-bronze-soft);
     transform: translateY(-3px);
   }
 
@@ -58,7 +58,7 @@ const marker = index != null ? String(index).padStart(2, '0') : undefined;
     color: var(--mu-faint);
     transition: color var(--mu-dur) var(--mu-ease);
   }
-  .cat:hover .cat__marker { color: var(--mu-amber); }
+  .cat:hover .cat__marker { color: var(--mu-bronze-soft); }
 
   .cat__body { display: grid; gap: 2px; margin-right: auto; }
   .cat__name {
@@ -75,5 +75,5 @@ const marker = index != null ? String(index).padStart(2, '0') : undefined;
   }
 
   .cat__arrow { color: var(--mu-faint); transition: transform var(--mu-dur) var(--mu-ease), color var(--mu-dur) var(--mu-ease); }
-  .cat:hover .cat__arrow { color: var(--mu-amber); transform: translateX(3px); }
+  .cat:hover .cat__arrow { color: var(--mu-bronze-soft); transform: translateX(3px); }
 </style>

@@ -18,7 +18,7 @@ interface Props {
   actionLabel?: string;
   actionHref?: string;
   /** surface tone */
-  tone?: 'ink' | 'inset' | 'forest';
+  tone?: 'base' | 'inset' | 'green';
   /** center the header block */
   centered?: boolean;
   id?: string;
@@ -31,7 +31,7 @@ const {
   intro,
   actionLabel,
   actionHref,
-  tone = 'ink',
+  tone = 'base',
   centered = false,
   id,
   class: className,
@@ -65,10 +65,10 @@ const hasHeader = Boolean(eyebrow || title || intro || actionLabel);
   .section {
     padding-block: var(--mu-section-y);
   }
-  .section--inset { background: var(--mu-ink-2); }
-  .section--forest {
-    background: var(--mu-forest);
-    border-block: 1px solid var(--mu-forest-line);
+  .section--inset { background: var(--mu-surface); }
+  .section--green {
+    background: var(--mu-green);
+    border-block: 1px solid var(--mu-green-line);
   }
 
   .section__head {
@@ -101,7 +101,7 @@ const hasHeader = Boolean(eyebrow || title || intro || actionLabel);
     transition: color var(--mu-dur) var(--mu-ease);
   }
   .section__action :global(svg) { transition: transform var(--mu-dur) var(--mu-ease); }
-  .section__action:hover { color: var(--mu-amber); }
+  .section__action:hover { color: var(--mu-bronze-soft); }
   .section__action:hover :global(svg) { transform: translateX(3px); }
 
   @media (max-width: 640px) {

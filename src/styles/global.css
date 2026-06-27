@@ -41,7 +41,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scrollbar-color: var(--mu-ink-4) var(--mu-ink);
+  scrollbar-color: var(--mu-surface-3) var(--mu-bg);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -56,7 +56,7 @@ html {
 }
 
 body {
-  background-color: var(--mu-ink);
+  background-color: var(--mu-bg);
   color: var(--mu-fog);
   font-family: var(--mu-font-body);
   font-size: var(--mu-text-base);
@@ -90,7 +90,7 @@ a {
   text-decoration: none;
   transition: color var(--mu-dur) var(--mu-ease);
 }
-a:hover { color: var(--mu-amber); }
+a:hover { color: var(--mu-bronze-soft); }
 
 img, svg, video { display: block; max-width: 100%; }
 img { height: auto; }
@@ -100,13 +100,13 @@ ul, ol { list-style: none; }
 strong { color: var(--mu-white); font-weight: var(--mu-weight-bold); }
 
 ::selection {
-  background: var(--mu-amber);
+  background: var(--mu-bronze-soft);
   color: var(--mu-on-accent);
 }
 
 /* ---- Focus (keyboard only, visible) -------------------------------------- */
 :focus-visible {
-  outline: 2px solid var(--mu-amber);
+  outline: 2px solid var(--mu-bronze-soft);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -126,7 +126,7 @@ strong { color: var(--mu-white); font-weight: var(--mu-weight-bold); }
   display: inline-flex;
   align-items: center;
   gap: var(--mu-space-2);
-  color: var(--mu-amber);
+  color: var(--mu-bronze-soft);
   font-size: var(--mu-text-xs);
   font-weight: var(--mu-weight-bold);
   letter-spacing: var(--mu-tracking-label);
@@ -136,7 +136,7 @@ strong { color: var(--mu-white); font-weight: var(--mu-weight-bold); }
   content: '';
   width: 28px;
   height: 1px;
-  background: linear-gradient(90deg, var(--mu-amber), transparent);
+  background: linear-gradient(90deg, var(--mu-bronze-soft), transparent);
 }
 
 .mu-lead {

@@ -15,9 +15,9 @@ interface Props {
 }
 
 const {
-  title = 'Midlife Unlocked — Masterclasses for divorced men over 40',
-  description = "Expert-taught video masterclasses, courses, and workshops to help men over 40 thrive after divorce. Attraction, dating, image, confidence, and the man you're becoming.",
-  ogImage = '/brand/webclip.png',
+  title = 'Midlife Unlocked - Masterclasses for Divorced Men Over 40',
+  description = 'We make it nearly impossible for divorced guys over 40 to fail at becoming irresistible to beautiful, supportive, feminine women — without sleazy manosphere red-pill nonsense, even if you’re fat, bald, short, and average-looking.',
+  ogImage = '/brand/og.png',
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
@@ -85,7 +85,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).hr
         top: -100%;
         z-index: var(--mu-z-overlay);
         padding: var(--mu-space-3) var(--mu-space-4);
-        background: var(--mu-amber);
+        background: var(--mu-bronze-soft);
         color: var(--mu-on-accent);
         font-weight: var(--mu-weight-bold);
         border-radius: var(--mu-radius-sm);

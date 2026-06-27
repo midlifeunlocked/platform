@@ -7,10 +7,10 @@ import LessonCard from '@components/LessonCard.astro';
 import CategoryCard from '@components/CategoryCard.astro';
 
 /* ---------------------------------------------------------------------------
-   Content for the homepage. Extracted from /reference (the Webflow export) and
-   the brand asset library — not its markup. Lessons/categories are sample data
-   wired to real thumbnails; in later phases this comes from Supabase, gated
-   through the entitlement layer (canAccessLesson → access).
+   Homepage — the pristine "Streaming" template's section structure, populated
+   with real Midlife Unlocked copy, metadata, and assets (no sample content).
+   Lessons/categories are sample data wired to real MU thumbnails; in later
+   phases this comes from Supabase, gated through the entitlement layer.
    ------------------------------------------------------------------------- */
 
 const categories = [
@@ -19,19 +19,19 @@ const categories = [
   { name: 'Image & Style', count: 9 },
   { name: 'Masculinity', count: 7 },
   { name: 'Body Language', count: 6 },
-  { name: 'Social Status', count: 8 },
+  { name: 'Business', count: 8 },
 ];
 
 const freeLessons = [
-  { title: 'Command Confidence in 5 Steps', category: 'Confidence', instructor: 'Lee Lambert', thumbnail: '/thumbnails/command-confidence.png', duration: '14 min', access: 'free' as const },
-  { title: 'Make a Head-Turning First Impression', category: 'Image & Style', instructor: 'Aidan Lee', thumbnail: '/thumbnails/first-impression.png', duration: '11 min', access: 'free' as const },
-  { title: 'Read the Room: Body Language Basics', category: 'Body Language', instructor: 'Gav Gillibrand', thumbnail: '/thumbnails/body-language.png', duration: '17 min', access: 'free' as const },
+  { title: '5 Steps to Command Confidence', category: 'Confidence', instructor: 'Lee Lambert', thumbnail: '/thumbnails/5-steps-to-command-confidence.png', duration: '14 min', access: 'free' as const },
+  { title: 'Make a Head-Turning First Impression', category: 'Image & Style', instructor: 'Aidan Lee', thumbnail: '/thumbnails/make-a-head-turning-first-impression.png', duration: '11 min', access: 'free' as const },
+  { title: 'Read the Room: Body Language', category: 'Body Language', instructor: 'Gav Gillibrand', thumbnail: '/thumbnails/body-language.png', duration: '17 min', access: 'free' as const },
 ];
 
 const premiumLessons = [
   { title: 'Outcome Independence', category: 'Masculinity', instructor: 'Lee Lambert', thumbnail: '/thumbnails/outcome-independence.png', duration: '28 min', access: 'premium' as const },
-  { title: 'Get More Matches on Dating Apps', category: 'Dating & Attraction', instructor: 'Aidan Lee', thumbnail: '/thumbnails/dating-apps.png', duration: '22 min', access: 'premium' as const },
-  { title: 'Make Her Fall For You', category: 'Dating & Attraction', instructor: 'Gav Gillibrand', thumbnail: '/thumbnails/make-her-fall.png', duration: '31 min', access: 'premium' as const },
+  { title: 'Get More Matches on Dating Apps', category: 'Dating & Attraction', instructor: 'Aidan Lee', thumbnail: '/thumbnails/get-more-matches-on-dating-apps.png', duration: '22 min', access: 'premium' as const },
+  { title: 'Make Her Fall For You', category: 'Dating & Attraction', instructor: 'Gav Gillibrand', thumbnail: '/thumbnails/make-her-fall-for-you.png', duration: '31 min', access: 'premium' as const },
 ];
 
 const planFeatures = [
@@ -40,41 +40,67 @@ const planFeatures = [
   'Taught by real experts, not influencers',
   'Watch anywhere, cancel anytime',
 ];
+
+const devices = [
+  { icon: 'tv' as const, name: 'Smart TVs', note: 'The big screen' },
+  { icon: 'laptop' as const, name: 'Laptops & Computers', note: 'At your desk' },
+  { icon: 'phone' as const, name: 'Phones', note: 'In your pocket' },
+  { icon: 'tablet' as const, name: 'Tablets', note: 'On the go' },
+];
+
+const faqs = [
+  {
+    q: "What's the difference between Free Core and Premium lessons?",
+    a: 'Free Core lessons give you a real taste of the method — no card required. Premium unlocks every full masterclass, with companion workbooks and new lessons added each month.',
+  },
+  {
+    q: 'If I subscribe, do I get access to everything?',
+    a: 'Yes. A Premium membership unlocks the entire Midlife Unlocked catalogue — every lesson, course, and workshop — on every device.',
+  },
+  {
+    q: 'Can I cancel at any time?',
+    a: 'Anytime, in a couple of clicks from your account. You keep access until the end of your billing period.',
+  },
+  {
+    q: 'Who teaches the masterclasses?',
+    a: 'Real, vetted experts in attraction, dating, image, confidence, masculinity and business — not manosphere influencers.',
+  },
+];
 ---
 
 <BaseLayout>
-  <!-- ===================== HERO — the thesis (full-bleed) ===================== -->
+  <!-- ===================== HERO — full-bleed brand portrait ===================== -->
   <section class="hero">
-    <div class="mu-container mu-container--wide hero__inner">
+    <div class="mu-container hero__inner">
       <div class="hero__copy">
-        <span class="mu-eyebrow" data-reveal><Icon name="lock" size={13} /> Masterclasses for divorced men over 40</span>
+        <span class="mu-eyebrow" data-reveal>Masterclasses for divorced men over 40</span>
         <h1 class="hero__title" data-reveal style="--reveal-delay:90ms">
-          Go after the life you've <span class="hero__accent">secretly wanted</span> all along.
+          Go after the life you've <span class="hero__accent">secretly fantasized</span> about all along.
         </h1>
         <p class="hero__lead" data-reveal style="--reveal-delay:180ms">
-          Video masterclasses, courses, and workshops to help you thrive after divorce —
-          actionable, proven, real-world guidance built specifically for men over 40.
+          Video lessons, courses, and workshops to help you thrive after divorce —
+          actionable, proven, real-world advice built specifically for men over 40.
         </p>
 
         <ul class="hero__proof" data-reveal style="--reveal-delay:260ms">
-          <li><Icon name="check" size={16} /> Taught by real experts</li>
-          <li><Icon name="check" size={16} /> Attraction · Image · Confidence · Money</li>
-          <li><Icon name="check" size={16} /> New lessons every month</li>
+          <li><Icon name="check" size={16} /> Learn from top experts: attraction, dating, image, confidence & more</li>
+          <li><Icon name="check" size={16} /> Actionable, proven, real-world advice for men over 40</li>
+          <li><Icon name="check" size={16} /> New lessons added every month</li>
         </ul>
 
         <div class="hero__actions" data-reveal style="--reveal-delay:340ms">
-          <Button href="/signup" size="lg" icon="arrow-right">Start free</Button>
+          <Button href="/signup" size="lg" icon="arrow-right">Sign up free</Button>
           <Button href="/categories#free" size="lg" variant="ghost" icon="play">Watch a free lesson</Button>
         </div>
-        <p class="hero__signin" data-reveal style="--reveal-delay:420ms">Already a member? <a href="/login">Log in</a>.</p>
+        <p class="hero__signin" data-reveal style="--reveal-delay:420ms">Already have an account? <a href="/login">Log in</a>.</p>
       </div>
     </div>
   </section>
 
-  <!-- ===================== CATEGORIES ===================== -->
+  <!-- ===================== EXPLORE LESSON CATEGORIES ===================== -->
   <Section
     eyebrow="Explore lesson categories"
-    title="Pick a place to start"
+    title="Explore lesson categories"
     actionLabel="Browse all"
     actionHref="/categories"
   >
@@ -88,7 +114,7 @@ const planFeatures = [
     id="free"
     tone="inset"
     eyebrow="Free core lessons"
-    title="Open to everyone"
+    title="Free core lessons"
     intro="A real taste of the method — no card required. Watch, then go deeper."
     actionLabel="Browse all"
     actionHref="/categories#free"
@@ -102,7 +128,7 @@ const planFeatures = [
   <Section
     id="premium"
     eyebrow="Premium lessons"
-    title="The depth, structure, and how"
+    title="Premium lessons"
     intro="Full masterclasses with companion workbooks — the part that actually changes things."
     actionLabel="Browse all"
     actionHref="/categories#premium"
@@ -112,26 +138,23 @@ const planFeatures = [
     </div>
   </Section>
 
-  <!-- ===================== PRICING TEASER ===================== -->
+  <!-- ===================== PRICING BAND (deep-green surface) ===================== -->
   <section class="plan">
-    <div class="mu-container mu-container--wide">
-      <div class="plan__card">
-        <div class="plan__copy" data-reveal>
+    <div class="mu-container">
+      <div class="plan__card" data-reveal>
+        <div class="plan__copy">
           <span class="mu-eyebrow"><Icon name="unlock" size={13} /> All-access pass</span>
-          <h2 class="plan__title">
-            Thrive after divorce for as little as
-            <span class="plan__price">$14.92</span><span class="plan__per">/month</span>
-          </h2>
+          <h2 class="plan__title">Thrive after divorce for as little as <span class="plan__price">$14.92</span> per month</h2>
           <p class="plan__sub">
-            Upgrade to Premium and unlock every lesson Midlife Unlocked has to offer —
-            billed annually, cancel anytime.
+            Grab an all-access pass! Upgrade to the Premium-level membership for as little as
+            $14.92 per month, and enjoy every lesson Midlife Unlocked has to offer.
           </p>
           <div class="plan__actions">
-            <Button href="/pricing" size="lg" icon="arrow-right">See pricing</Button>
-            <Button href="/signup" size="lg" variant="solid-light">Start free first</Button>
+            <Button href="/pricing" size="lg" icon="arrow-right">Subscribe today!</Button>
+            <Button href="/signup" size="lg" variant="ghost">Start free</Button>
           </div>
         </div>
-        <ul class="plan__features" data-reveal style="--reveal-delay:120ms">
+        <ul class="plan__features">
           {planFeatures.map((f) => (
             <li><span class="plan__check"><Icon name="check" size={15} /></span>{f}</li>
           ))}
@@ -139,6 +162,40 @@ const planFeatures = [
       </div>
     </div>
   </section>
+
+  <!-- ===================== AVAILABLE ON YOUR DEVICES ===================== -->
+  <Section
+    tone="inset"
+    eyebrow="Watch anywhere"
+    title="Available on all your devices"
+    intro="Pick up right where you left off — at home, at the gym, or on the move."
+    centered
+  >
+    <div class="device-grid">
+      {devices.map((d, i) => (
+        <div class="device" data-reveal style={`--reveal-delay:${i * 60}ms`}>
+          <span class="device__icon"><Icon name={d.icon} size={26} /></span>
+          <h3 class="device__name">{d.name}</h3>
+          <p class="device__note">{d.note}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <!-- ===================== FAQ ===================== -->
+  <Section eyebrow="Questions" title="Frequently asked questions" centered>
+    <div class="faq" data-reveal>
+      {faqs.map((item) => (
+        <details class="faq__item">
+          <summary class="faq__q">
+            {item.q}
+            <span class="faq__icon"><Icon name="chevron-down" size={20} /></span>
+          </summary>
+          <p class="faq__a">{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </Section>
 </BaseLayout>
 
 <style>
@@ -150,59 +207,44 @@ const planFeatures = [
     min-height: clamp(560px, 84vh, 760px);
     border-bottom: 1px solid var(--mu-line-soft);
     background-image:
-      linear-gradient(90deg, rgba(15, 15, 17, 0.94) 0%, rgba(15, 15, 17, 0.72) 36%, rgba(15, 15, 17, 0.28) 62%, rgba(15, 15, 17, 0.5) 100%),
-      linear-gradient(0deg, var(--mu-ink) 1%, rgba(15, 15, 17, 0) 30%),
+      linear-gradient(90deg, rgba(18, 18, 20, 0.95) 0%, rgba(18, 18, 20, 0.74) 36%, rgba(18, 18, 20, 0.3) 62%, rgba(18, 18, 20, 0.52) 100%),
+      linear-gradient(0deg, var(--mu-bg) 1%, rgba(18, 18, 20, 0) 30%),
       url('/images/hero-cropped.png');
-    background-position: 0 0, 0 0, 62% 26%;
+    background-position: 0 0, 0 0, 64% 26%;
     background-repeat: no-repeat;
     background-size: auto, auto, cover;
   }
   .hero__inner { width: 100%; padding-block: clamp(3rem, 7vw, 5rem); }
-  .hero__copy { max-width: 600px; }
+  .hero__copy { max-width: 620px; }
 
   .hero__title {
     font-size: var(--mu-text-4xl);
+    line-height: 1.06;
     margin-top: var(--mu-space-5);
-    line-height: 1.04;
+    margin-bottom: var(--mu-space-5);
     overflow-wrap: break-word;
   }
-  .hero__accent {
-    color: var(--mu-amber);
-    position: relative;
-    white-space: nowrap;
-  }
-  @media (max-width: 560px) {
-    .hero__accent { white-space: normal; }
-  }
-  .hero__accent::after {
-    content: '';
-    position: absolute;
-    left: 0; right: 0; bottom: 0.04em;
-    height: 0.08em;
-    background: var(--mu-bronze);
-    opacity: 0.5;
-  }
+  .hero__accent { color: var(--mu-bronze-soft); }
+
   .hero__lead {
-    margin-top: var(--mu-space-5);
     font-size: var(--mu-text-lg);
     color: var(--mu-fog);
-    max-width: 50ch;
+    max-width: 52ch;
   }
   .hero__proof {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--mu-space-3) var(--mu-space-5);
+    display: grid;
+    gap: var(--mu-space-3);
     margin-top: var(--mu-space-5);
   }
   .hero__proof li {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--mu-space-2);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--mu-space-3);
     color: var(--mu-fog);
     font-size: var(--mu-text-sm);
     font-weight: var(--mu-weight-medium);
   }
-  .hero__proof :global(svg) { color: var(--mu-amber); flex-shrink: 0; }
+  .hero__proof :global(svg) { color: var(--mu-bronze-soft); flex-shrink: 0; margin-top: 3px; }
 
   .hero__actions {
     display: flex;
@@ -215,17 +257,16 @@ const planFeatures = [
     color: var(--mu-mute);
     font-size: var(--mu-text-sm);
   }
-  .hero__signin a { color: var(--mu-amber); font-weight: var(--mu-weight-bold); }
+  .hero__signin a { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
 
-  /* Mobile: stack text to the bottom, let the portrait read up top */
   @media (max-width: 760px) {
     .hero {
       align-items: flex-end;
-      min-height: 88vh;
+      min-height: 90vh;
       background-image:
-        linear-gradient(180deg, rgba(15, 15, 17, 0.32) 0%, rgba(15, 15, 17, 0.72) 52%, var(--mu-ink) 99%),
+        linear-gradient(180deg, rgba(18, 18, 20, 0.3) 0%, rgba(18, 18, 20, 0.72) 52%, var(--mu-bg) 99%),
         url('/images/hero-cropped.png');
-      background-position: 0 0, 58% 16%;
+      background-position: 0 0, 60% 16%;
       background-size: auto, cover;
     }
     .hero__copy { max-width: 100%; }
@@ -245,7 +286,7 @@ const planFeatures = [
     gap: var(--mu-space-5);
   }
 
-  /* ---- Plan / pricing teaser ---- */
+  /* ---- Pricing band ---- */
   .plan { padding-block: var(--mu-section-y); }
   .plan__card {
     display: grid;
@@ -254,19 +295,18 @@ const planFeatures = [
     align-items: center;
     padding: clamp(2rem, 4vw, 3.5rem);
     background:
-      radial-gradient(90% 120% at 100% 0%, rgba(255, 158, 44, 0.10), transparent 55%),
-      var(--mu-forest);
-    border: 1px solid var(--mu-forest-line);
+      radial-gradient(90% 130% at 100% 0%, rgba(164, 97, 51, 0.16), transparent 55%),
+      var(--mu-green);
+    border: 1px solid var(--mu-green-line);
     border-radius: var(--mu-radius-lg);
   }
   .plan__title {
     margin-top: var(--mu-space-4);
     font-size: var(--mu-text-3xl);
-    line-height: 1.12;
+    line-height: 1.18;
   }
-  .plan__price { color: var(--mu-amber); }
-  .plan__per { color: var(--mu-mute); font-size: 0.6em; font-weight: var(--mu-weight-medium); }
-  .plan__sub { margin-top: var(--mu-space-4); color: var(--mu-fog); max-width: 46ch; }
+  .plan__price { color: var(--mu-bronze-soft); }
+  .plan__sub { margin-top: var(--mu-space-4); color: var(--mu-fog); max-width: 48ch; }
   .plan__actions { display: flex; flex-wrap: wrap; gap: var(--mu-space-4); margin-top: var(--mu-space-6); }
 
   .plan__features { display: grid; gap: var(--mu-space-4); }
@@ -274,7 +314,7 @@ const planFeatures = [
     display: flex;
     align-items: flex-start;
     gap: var(--mu-space-3);
-    color: var(--mu-fog);
+    color: var(--mu-white);
     font-weight: var(--mu-weight-medium);
   }
   .plan__check {
@@ -284,14 +324,74 @@ const planFeatures = [
     width: 26px; height: 26px;
     margin-top: 1px;
     color: var(--mu-on-accent);
-    background: var(--mu-amber);
+    background: var(--mu-bronze);
     border-radius: var(--mu-radius-pill);
+  }
+
+  /* ---- Devices ---- */
+  .device-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--mu-space-5);
+  }
+  .device {
+    text-align: center;
+    padding: var(--mu-space-6) var(--mu-space-4);
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius);
+    transition: transform var(--mu-dur) var(--mu-ease), border-color var(--mu-dur) var(--mu-ease);
+  }
+  .device:hover { transform: translateY(-3px); border-color: var(--mu-line); }
+  .device__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 56px; height: 56px;
+    margin-bottom: var(--mu-space-4);
+    color: var(--mu-bronze-soft);
+    background: var(--mu-bronze-tint);
+    border-radius: var(--mu-radius);
+  }
+  .device__name { font-size: var(--mu-text-lg); }
+  .device__note { margin-top: var(--mu-space-1); color: var(--mu-mute); font-size: var(--mu-text-sm); }
+
+  /* ---- FAQ ---- */
+  .faq { max-width: 760px; margin-inline: auto; display: grid; gap: var(--mu-space-3); }
+  .faq__item {
+    background: var(--mu-surface-2);
+    border: 1px solid var(--mu-line-soft);
+    border-radius: var(--mu-radius);
+    padding: 0 var(--mu-space-5);
+  }
+  .faq__item[open] { border-color: var(--mu-line); }
+  .faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mu-space-4);
+    padding: var(--mu-space-5) 0;
+    color: var(--mu-white);
+    font-family: var(--mu-font-display);
+    font-size: var(--mu-text-lg);
+    font-weight: var(--mu-weight-bold);
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__icon { color: var(--mu-bronze-soft); flex-shrink: 0; transition: transform var(--mu-dur) var(--mu-ease); }
+  .faq__item[open] .faq__icon { transform: rotate(180deg); }
+  .faq__a {
+    margin: 0;
+    padding-bottom: var(--mu-space-5);
+    color: var(--mu-fog);
+    max-width: 62ch;
   }
 
   /* ---- Responsive ---- */
   @media (max-width: 1000px) {
     .cat-grid { grid-template-columns: repeat(2, 1fr); }
     .lesson-grid { grid-template-columns: repeat(2, 1fr); }
+    .device-grid { grid-template-columns: repeat(2, 1fr); }
     .plan__card { grid-template-columns: 1fr; gap: var(--mu-space-6); }
   }
   @media (max-width: 620px) {

@@ -54,7 +54,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
     position: sticky;
     top: 0;
     z-index: var(--mu-z-nav);
-    background: color-mix(in srgb, var(--mu-ink) 82%, transparent);
+    background: color-mix(in srgb, var(--mu-bg) 82%, transparent);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--mu-line-soft);
   }
@@ -93,7 +93,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
     font-size: var(--mu-text-sm);
     font-weight: var(--mu-weight-bold);
   }
-  .nav__login:hover { color: var(--mu-amber); }
+  .nav__login:hover { color: var(--mu-bronze-soft); }
 
   .nav__toggle {
     display: none;
@@ -121,7 +121,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
     padding-block: var(--mu-space-3);
     border-bottom: 1px solid var(--mu-line-soft);
   }
-  .nav__mobile-link:hover { color: var(--mu-amber); }
+  .nav__mobile-link:hover { color: var(--mu-bronze-soft); }
 
   @media (max-width: 900px) {
     .nav__links, .nav__actions { display: none; }

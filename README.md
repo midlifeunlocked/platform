@@ -69,12 +69,21 @@ swappability/sellability insurance from spec §6.
 | Cards | [`LessonCard.astro`](./src/components/LessonCard.astro) · [`CategoryCard.astro`](./src/components/CategoryCard.astro) |
 | Icons | [`src/components/Icon.astro`](./src/components/Icon.astro) |
 
-**Direction — "Forged":** near-black canvas, aged-bronze/amber as the single
-bold accent, deep-forest green as a quiet secondary; THICCCBOI (brand typeface)
-for display and body. The brand mark is a padlock (M + U), so **lock-state is the
-signature** — free vs. premium is shown with an unlock/lock badge, which is
-structurally true to the product, not decoration.
+**Direction:** built on the pristine "Streaming" Webflow template's structure
+(type scale, 1224px container, 48px pill buttons, full homepage section flow),
+re-skinned with the canonical Midlife Unlocked palette:
+
+| Role | Value |
+| :--- | :---- |
+| Background | `#121214` |
+| Accent 1 — deep forest green (surface tone, e.g. the pricing band) | `#072107` |
+| Accent 2 — bronze (interactive: buttons, links, eyebrows) | `#A46133` |
+| Display + body type | THICCCBOI (brand typeface) |
+
+Free vs. premium lessons carry an unlock/lock badge — structurally true to the
+product (the entitlement model), not decoration.
 
 All design values come from tokens; components carry no raw hex. The Webflow
-export and source assets live outside the repo (gitignored) as `/reference`;
+exports (pristine `streamingtemplate.webflow`, legacy `midlifeunlocked.webflow`)
+and source asset folders live outside the repo (gitignored) as design reference;
 assets the app actually uses are copied into [`public/`](./public).

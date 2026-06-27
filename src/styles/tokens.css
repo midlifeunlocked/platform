@@ -1,43 +1,47 @@
 /* =============================================================================
    Midlife Unlocked — Design Tokens
-   "Forged": a near-black canvas, aged-bronze/amber as the single bold accent,
-   deep-forest green as a quiet secondary. Derived from the brand's Webflow
-   palette and the THICCCBOI brand typeface. Every component reads from here —
-   no raw hex values live in component files.
+   Built on the pristine "Streaming" Webflow template's structure (type scale,
+   spacing, 1224px container, 48px pill buttons), re-skinned with the canonical
+   Midlife Unlocked brand palette. Every component reads from here.
+
+   Brand palette (authoritative):
+     background  #121214
+     accent 1    #072107   deep forest green  → surface/section tone
+     accent 2    #A46133   bronze             → interactive (buttons, links)
    ============================================================================= */
 
 :root {
-  /* ---- Color · surfaces (forged dark) ------------------------------------ */
-  --mu-ink:        #0F0F11;  /* page canvas                                   */
-  --mu-ink-2:      #161618;  /* raised section / inset                        */
-  --mu-ink-3:      #1C1C20;  /* card surface                                  */
-  --mu-ink-4:      #242429;  /* card hover / control                          */
-  --mu-line:       #2B2B30;  /* hairline borders                             */
-  --mu-line-soft:  #202024;  /* faint dividers                               */
+  /* ---- Color · surfaces --------------------------------------------------- */
+  --mu-bg:         #121214;  /* page canvas (brand background)                 */
+  --mu-surface:    #181818;  /* raised section / card (template --dark-card)   */
+  --mu-surface-2:  #1F1F22;  /* card hover / inset                             */
+  --mu-surface-3:  #26262B;  /* control / pill                                 */
+  --mu-line:       #2C2C31;  /* hairline borders                              */
+  --mu-line-soft:  #212125;  /* faint dividers                                */
 
-  /* ---- Color · text ------------------------------------------------------ */
-  --mu-white:      #FFFFFF;  /* headings                                      */
-  --mu-fog:        #DFDFDF;  /* body text (brand neutral-400)                 */
+  /* ---- Color · text ------------------------------------------------------- */
+  --mu-white:      #FFFFFF;  /* headings (template --neutral--100)             */
+  --mu-fog:        #DFDFDF;  /* body text  (template --neutral--400)           */
   --mu-mute:       #9A9AA1;  /* secondary text                                */
   --mu-faint:      #66666D;  /* tertiary / disabled                           */
 
-  /* ---- Color · accent (aged bronze / amber) ------------------------------ */
-  --mu-amber:      #FF9E2C;  /* primary accent — used with restraint          */
-  --mu-amber-soft: #FFB45C;  /* hover / lighter                               */
-  --mu-bronze:     #A46133;  /* deep bronze (brand button base)               */
-  --mu-amber-tint: rgba(255, 158, 44, 0.12); /* wash behind accents          */
+  /* ---- Color · accent 2 (bronze — interactive) --------------------------- */
+  --mu-bronze:       #A46133;  /* brand bronze: button fills                  */
+  --mu-bronze-soft:  #C6884F;  /* tint: accent text, links, eyebrows, hover   */
+  --mu-bronze-deep:  #854E27;  /* shade: pressed                              */
+  --mu-bronze-tint:  rgba(164, 97, 51, 0.14); /* wash behind accents          */
+  --mu-on-accent:    #FFFFFF;  /* text on bronze fills                        */
 
-  /* ---- Color · forest (secondary tone) ----------------------------------- */
-  --mu-forest:     #0B2A12;  /* deep green surface (from brand #072107)        */
-  --mu-forest-2:   #103A1B;  /* raised forest                                 */
-  --mu-forest-line:#1C5230;
+  /* ---- Color · accent 1 (deep forest green — surface tone) --------------- */
+  --mu-green:      #072107;  /* brand green: deep section/blockquote surface   */
+  --mu-green-2:    #0C2E0C;  /* raised green                                  */
+  --mu-green-line: #16401A;  /* green borders                                 */
 
   /* ---- Color · system ---------------------------------------------------- */
   --mu-success:    #05C168;
   --mu-danger:     #FF5A65;
-  --mu-on-accent:  #1A1206;  /* text on amber fills (warm near-black)         */
 
-  /* ---- Typography -------------------------------------------------------- */
+  /* ---- Typography (template scale) --------------------------------------- */
   --mu-font-display: 'Thicccboi', 'Archivo', system-ui, sans-serif;
   --mu-font-body:    'Thicccboi', system-ui, -apple-system, sans-serif;
   --mu-font-mono:    'Archivo', ui-monospace, 'SF Mono', menlo, monospace;
@@ -46,21 +50,22 @@
   --mu-weight-medium:  500;
   --mu-weight-bold:    700;
 
-  /* fluid type scale (1.250 major-third base, capped at the high end) */
-  --mu-text-xs:   0.75rem;    /* 12 — labels, eyebrows                        */
-  --mu-text-sm:   0.875rem;   /* 14                                          */
-  --mu-text-base: 1rem;       /* 16 — body                                   */
-  --mu-text-lg:   1.125rem;   /* 18 — lead body                              */
-  --mu-text-xl:   1.375rem;   /* 22 — h4                                     */
-  --mu-text-2xl:  clamp(1.5rem, 1.2rem + 1.2vw, 1.75rem);   /* h3            */
-  --mu-text-3xl:  clamp(1.9rem, 1.4rem + 2.2vw, 2.375rem);  /* h2            */
-  --mu-text-4xl:  clamp(2.1rem, 1.2rem + 3.8vw, 3.5rem);    /* display / h1  */
+  /* Matches the template (h1 54/66 · h2 38/48 · h3 24/34 · h4 22/28 · 16/28),
+     with the two display sizes made fluid and capped at the template values. */
+  --mu-text-xs:   0.75rem;   /* 12 — eyebrows, labels                        */
+  --mu-text-sm:   0.875rem;  /* 14                                          */
+  --mu-text-base: 1rem;      /* 16 — body                                   */
+  --mu-text-lg:   1.125rem;  /* 18 — lead / h5                              */
+  --mu-text-xl:   1.375rem;  /* 22 — h4                                     */
+  --mu-text-2xl:  1.5rem;    /* 24 — h3                                     */
+  --mu-text-3xl:  clamp(1.9rem, 1.35rem + 2.4vw, 2.375rem);  /* 38 — h2     */
+  --mu-text-4xl:  clamp(2.25rem, 1.4rem + 3.6vw, 3.375rem);  /* 54 — h1     */
 
-  --mu-leading-tight:  1.08;
-  --mu-leading-snug:   1.25;
-  --mu-leading-body:   1.6;
-  --mu-tracking-tight: -0.02em;  /* display headings                         */
-  --mu-tracking-label: 0.16em;   /* uppercase eyebrows                        */
+  --mu-leading-tight:  1.12;
+  --mu-leading-snug:   1.3;
+  --mu-leading-body:   1.75;  /* template 28/16                              */
+  --mu-tracking-tight: -0.015em;
+  --mu-tracking-label: 0.16em;
 
   /* ---- Spacing (4px base) ------------------------------------------------ */
   --mu-space-1:  0.25rem;
@@ -74,31 +79,30 @@
   --mu-space-9:  6rem;
   --mu-space-10: 8rem;
 
-  /* ---- Layout ------------------------------------------------------------ */
-  --mu-container:      1200px;
+  /* ---- Layout (template container) --------------------------------------- */
+  --mu-container:      1224px;
   --mu-container-wide: 1320px;
-  --mu-gutter:         clamp(1.25rem, 5vw, 3rem);
-  --mu-section-y:      clamp(3.5rem, 7vw, 6rem);  /* vertical section rhythm  */
+  --mu-gutter:         clamp(1.25rem, 4vw, 1.5rem);  /* template 24px         */
+  --mu-section-y:      clamp(3.5rem, 7vw, 6.5rem);
 
   /* ---- Radius ------------------------------------------------------------ */
   --mu-radius-sm:   8px;
   --mu-radius:      14px;
-  --mu-radius-lg:   22px;
-  --mu-radius-pill: 999px;
+  --mu-radius-lg:   20px;
+  --mu-radius-pill: 48px;
 
   /* ---- Elevation --------------------------------------------------------- */
   --mu-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --mu-shadow:    0 12px 30px -12px rgba(0, 0, 0, 0.7);
-  --mu-shadow-lg: 0 28px 60px -20px rgba(0, 0, 0, 0.8);
-  --mu-glow:      0 0 0 1px rgba(255, 158, 44, 0.35), 0 8px 28px -8px rgba(255, 158, 44, 0.28);
+  --mu-shadow:    0 14px 34px -14px rgba(0, 0, 0, 0.7);
+  --mu-shadow-lg: 0 30px 64px -22px rgba(0, 0, 0, 0.82);
 
   /* ---- Motion ------------------------------------------------------------ */
-  --mu-ease:        cubic-bezier(0.22, 1, 0.36, 1);
-  --mu-dur-fast:    0.16s;
-  --mu-dur:         0.28s;
-  --mu-dur-slow:    0.5s;
+  --mu-ease:     cubic-bezier(0.22, 1, 0.36, 1);
+  --mu-dur-fast: 0.16s;
+  --mu-dur:      0.3s;
+  --mu-dur-slow: 0.5s;
 
   /* ---- Z-index ----------------------------------------------------------- */
-  --mu-z-nav:    100;
+  --mu-z-nav:     100;
   --mu-z-overlay: 200;
 }
