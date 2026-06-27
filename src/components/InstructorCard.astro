@@ -15,10 +15,13 @@ interface Props {
 
 const { name, role, photo, specialties = [], bio, href, ...rest } = Astro.props;
 const Tag = href ? 'a' : 'div';
+const initials = name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 ---
 
 <Tag class="instructor" href={href} {...rest}>
-  <img class="instructor__photo" src={photo} alt={name} width="160" height="160" loading="lazy" />
+  {photo
+    ? <img class="instructor__photo" src={photo} alt={name} width="160" height="160" loading="lazy" />
+    : <span class="instructor__photo instructor__photo--initials" aria-hidden="true">{initials}</span>}
   <div class="instructor__body">
     <span class="instructor__role">{role}</span>
     <h3 class="instructor__name">{name}</h3>
