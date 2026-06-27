@@ -12,13 +12,15 @@ interface Props {
   href?: string;
   /** two-digit index used as a quiet structural marker */
   index?: number;
+  /** passthrough (e.g. data-reveal, style, class) */
+  [key: string]: unknown;
 }
 
-const { name, count, href = '#', index } = Astro.props;
+const { name, count, href = '#', index, ...rest } = Astro.props;
 const marker = index != null ? String(index).padStart(2, '0') : undefined;
 ---
 
-<a class="cat" href={href}>
+<a class="cat" href={href} {...rest}>
   {marker && <span class="cat__marker">{marker}</span>}
   <span class="cat__body">
     <span class="cat__name">{name}</span>

@@ -16,6 +16,8 @@ interface Props {
   href?: string;
   duration?: string;
   access: 'free' | 'premium';
+  /** passthrough (e.g. data-reveal, style, class) */
+  [key: string]: unknown;
 }
 
 const {
@@ -26,12 +28,13 @@ const {
   href = '#',
   duration,
   access,
+  ...rest
 } = Astro.props;
 
 const isFree = access === 'free';
 ---
 
-<article class="lesson">
+<article class="lesson" {...rest}>
   <a class="lesson__link" href={href} aria-label={title}>
     <div class="lesson__media">
       <img class="lesson__img" src={thumbnail} alt="" loading="lazy" width="1280" height="720" />

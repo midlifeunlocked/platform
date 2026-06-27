@@ -26,6 +26,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).hr
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Mark JS available before paint so scroll-reveal hides content only when
+         it can actually animate it back in (no-JS users see everything). -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
@@ -51,6 +54,29 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).hr
     <Nav />
     <main id="main"><slot /></main>
     <Footer />
+
+    <script>
+      // Scroll reveal: fade [data-reveal] elements up as they enter view.
+      // Honors reduced-motion and degrades gracefully without IntersectionObserver.
+      const els = document.querySelectorAll('[data-reveal]');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || !('IntersectionObserver' in window)) {
+        els.forEach((el) => el.classList.add('is-revealed'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                obs.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+        );
+        els.forEach((el) => io.observe(el));
+      }
+    </script>
 
     <style>
       .skip-link {

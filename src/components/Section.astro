@@ -43,7 +43,7 @@ const hasHeader = Boolean(eyebrow || title || intro || actionLabel);
 <section id={id} class:list={['section', `section--${tone}`, className]}>
   <div class="mu-container">
     {hasHeader && (
-      <header class:list={['section__head', { 'section__head--centered': centered }]}>
+      <header class:list={['section__head', { 'section__head--centered': centered }]} data-reveal>
         <div class="section__heading">
           {eyebrow && <span class="mu-eyebrow">{eyebrow}</span>}
           {title && <h2 class="section__title">{title}</h2>}

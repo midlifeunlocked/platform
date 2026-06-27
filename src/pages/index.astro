@@ -43,44 +43,30 @@ const planFeatures = [
 ---
 
 <BaseLayout>
-  <!-- ===================== HERO — the thesis ===================== -->
+  <!-- ===================== HERO — the thesis (full-bleed) ===================== -->
   <section class="hero">
-    <div class="mu-container mu-container--wide hero__grid">
+    <div class="mu-container mu-container--wide hero__inner">
       <div class="hero__copy">
-        <span class="mu-eyebrow"><Icon name="lock" size={13} /> Masterclasses for divorced men over 40</span>
-        <h1 class="hero__title">
+        <span class="mu-eyebrow" data-reveal><Icon name="lock" size={13} /> Masterclasses for divorced men over 40</span>
+        <h1 class="hero__title" data-reveal style="--reveal-delay:90ms">
           Go after the life you've <span class="hero__accent">secretly wanted</span> all along.
         </h1>
-        <p class="hero__lead">
+        <p class="hero__lead" data-reveal style="--reveal-delay:180ms">
           Video masterclasses, courses, and workshops to help you thrive after divorce —
           actionable, proven, real-world guidance built specifically for men over 40.
         </p>
 
-        <ul class="hero__proof">
+        <ul class="hero__proof" data-reveal style="--reveal-delay:260ms">
           <li><Icon name="check" size={16} /> Taught by real experts</li>
           <li><Icon name="check" size={16} /> Attraction · Image · Confidence · Money</li>
           <li><Icon name="check" size={16} /> New lessons every month</li>
         </ul>
 
-        <div class="hero__actions">
+        <div class="hero__actions" data-reveal style="--reveal-delay:340ms">
           <Button href="/signup" size="lg" icon="arrow-right">Start free</Button>
           <Button href="/categories#free" size="lg" variant="ghost" icon="play">Watch a free lesson</Button>
         </div>
-        <p class="hero__signin">Already a member? <a href="/login">Log in</a>.</p>
-      </div>
-
-      <div class="hero__media">
-        <div class="hero__frame">
-          <img src="/images/reading-man.jpg" alt="A composed man in his forties, reading with intent." width="1281" height="720" />
-          <div class="hero__tag">
-            <Icon name="unlock" size={15} />
-            <div>
-              <strong>Now unlocking</strong>
-              <span>Your next chapter</span>
-            </div>
-          </div>
-        </div>
-        <div class="hero__glow" aria-hidden="true"></div>
+        <p class="hero__signin" data-reveal style="--reveal-delay:420ms">Already a member? <a href="/login">Log in</a>.</p>
       </div>
     </div>
   </section>
@@ -93,7 +79,7 @@ const planFeatures = [
     actionHref="/categories"
   >
     <div class="cat-grid">
-      {categories.map((c, i) => <CategoryCard name={c.name} count={c.count} index={i + 1} href="/categories" />)}
+      {categories.map((c, i) => <CategoryCard name={c.name} count={c.count} index={i + 1} href="/categories" data-reveal style={`--reveal-delay:${i * 55}ms`} />)}
     </div>
   </Section>
 
@@ -108,7 +94,7 @@ const planFeatures = [
     actionHref="/categories#free"
   >
     <div class="lesson-grid">
-      {freeLessons.map((l) => <LessonCard {...l} />)}
+      {freeLessons.map((l, i) => <LessonCard {...l} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
     </div>
   </Section>
 
@@ -122,7 +108,7 @@ const planFeatures = [
     actionHref="/categories#premium"
   >
     <div class="lesson-grid">
-      {premiumLessons.map((l) => <LessonCard {...l} />)}
+      {premiumLessons.map((l, i) => <LessonCard {...l} data-reveal style={`--reveal-delay:${i * 80}ms`} />)}
     </div>
   </Section>
 
@@ -130,7 +116,7 @@ const planFeatures = [
   <section class="plan">
     <div class="mu-container mu-container--wide">
       <div class="plan__card">
-        <div class="plan__copy">
+        <div class="plan__copy" data-reveal>
           <span class="mu-eyebrow"><Icon name="unlock" size={13} /> All-access pass</span>
           <h2 class="plan__title">
             Thrive after divorce for as little as
@@ -145,7 +131,7 @@ const planFeatures = [
             <Button href="/signup" size="lg" variant="solid-light">Start free first</Button>
           </div>
         </div>
-        <ul class="plan__features">
+        <ul class="plan__features" data-reveal style="--reveal-delay:120ms">
           {planFeatures.map((f) => (
             <li><span class="plan__check"><Icon name="check" size={15} /></span>{f}</li>
           ))}
@@ -156,22 +142,24 @@ const planFeatures = [
 </BaseLayout>
 
 <style>
-  /* ---- Hero ---- */
+  /* ---- Hero (full-bleed background image + dark scrim) ---- */
   .hero {
     position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid var(--mu-line-soft);
-    background:
-      radial-gradient(120% 80% at 85% -10%, rgba(255, 158, 44, 0.10), transparent 60%),
-      var(--mu-ink);
-  }
-  .hero__grid {
-    display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
+    display: flex;
     align-items: center;
-    gap: var(--mu-space-8);
-    padding-block: clamp(3rem, 6vw, 5.5rem);
+    min-height: clamp(560px, 84vh, 760px);
+    border-bottom: 1px solid var(--mu-line-soft);
+    background-image:
+      linear-gradient(90deg, rgba(15, 15, 17, 0.94) 0%, rgba(15, 15, 17, 0.72) 36%, rgba(15, 15, 17, 0.28) 62%, rgba(15, 15, 17, 0.5) 100%),
+      linear-gradient(0deg, var(--mu-ink) 1%, rgba(15, 15, 17, 0) 30%),
+      url('/images/hero-cropped.png');
+    background-position: 0 0, 0 0, 62% 26%;
+    background-repeat: no-repeat;
+    background-size: auto, auto, cover;
   }
+  .hero__inner { width: 100%; padding-block: clamp(3rem, 7vw, 5rem); }
+  .hero__copy { max-width: 600px; }
+
   .hero__title {
     font-size: var(--mu-text-4xl);
     margin-top: var(--mu-space-5);
@@ -198,7 +186,7 @@ const planFeatures = [
     margin-top: var(--mu-space-5);
     font-size: var(--mu-text-lg);
     color: var(--mu-fog);
-    max-width: 52ch;
+    max-width: 50ch;
   }
   .hero__proof {
     display: flex;
@@ -210,7 +198,7 @@ const planFeatures = [
     display: inline-flex;
     align-items: center;
     gap: var(--mu-space-2);
-    color: var(--mu-mute);
+    color: var(--mu-fog);
     font-size: var(--mu-text-sm);
     font-weight: var(--mu-weight-medium);
   }
@@ -229,41 +217,18 @@ const planFeatures = [
   }
   .hero__signin a { color: var(--mu-amber); font-weight: var(--mu-weight-bold); }
 
-  /* Hero media */
-  .hero__media { position: relative; }
-  .hero__frame {
-    position: relative;
-    z-index: 1;
-    border: 1px solid var(--mu-line);
-    border-radius: var(--mu-radius-lg);
-    overflow: hidden;
-    box-shadow: var(--mu-shadow-lg);
-    aspect-ratio: 4 / 3.2;
-  }
-  .hero__frame img { width: 100%; height: 100%; object-fit: cover; }
-  .hero__tag {
-    position: absolute;
-    left: var(--mu-space-4);
-    bottom: var(--mu-space-4);
-    display: flex;
-    align-items: center;
-    gap: var(--mu-space-3);
-    padding: var(--mu-space-3) var(--mu-space-4);
-    background: rgba(15, 15, 17, 0.78);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--mu-line);
-    border-radius: var(--mu-radius);
-    color: var(--mu-amber);
-  }
-  .hero__tag div { display: grid; line-height: 1.2; }
-  .hero__tag strong { color: var(--mu-white); font-size: var(--mu-text-sm); }
-  .hero__tag span { color: var(--mu-mute); font-size: var(--mu-text-xs); }
-  .hero__glow {
-    position: absolute;
-    inset: -10% -10% -20% 10%;
-    background: radial-gradient(50% 50% at 50% 50%, rgba(255, 158, 44, 0.18), transparent 70%);
-    filter: blur(20px);
-    z-index: 0;
+  /* Mobile: stack text to the bottom, let the portrait read up top */
+  @media (max-width: 760px) {
+    .hero {
+      align-items: flex-end;
+      min-height: 88vh;
+      background-image:
+        linear-gradient(180deg, rgba(15, 15, 17, 0.32) 0%, rgba(15, 15, 17, 0.72) 52%, var(--mu-ink) 99%),
+        url('/images/hero-cropped.png');
+      background-position: 0 0, 58% 16%;
+      background-size: auto, cover;
+    }
+    .hero__copy { max-width: 100%; }
   }
 
   /* ---- Category grid ---- */
@@ -325,8 +290,6 @@ const planFeatures = [
 
   /* ---- Responsive ---- */
   @media (max-width: 1000px) {
-    .hero__grid { grid-template-columns: 1fr; }
-    .hero__media { order: -1; max-width: 520px; }
     .cat-grid { grid-template-columns: repeat(2, 1fr); }
     .lesson-grid { grid-template-columns: repeat(2, 1fr); }
     .plan__card { grid-template-columns: 1fr; gap: var(--mu-space-6); }
