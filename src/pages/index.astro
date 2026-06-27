@@ -5,6 +5,7 @@ import Button from '@components/Button.astro';
 import Icon from '@components/Icon.astro';
 import LessonCard from '@components/LessonCard.astro';
 import CategoryCard from '@components/CategoryCard.astro';
+import Carousel from '@components/Carousel.astro';
 import Faq from '@components/Faq.astro';
 import { categories, categoryCount, freeLessons, premiumLessons, toCardProps } from '@/data/catalog';
 
@@ -87,9 +88,9 @@ const faqs = [
     actionLabel="Browse all"
     actionHref="/categories"
   >
-    <div class="mu-row mu-row--cats" data-reveal>
+    <Carousel variant="cats" label="categories" data-reveal>
       {categories.map((c) => <CategoryCard name={c.name} count={categoryCount(c.name)} image={c.image} href={`/categories#${c.slug}`} />)}
-    </div>
+    </Carousel>
   </Section>
 
   <!-- ===================== FREE CORE LESSONS ===================== -->
@@ -100,9 +101,9 @@ const faqs = [
     actionLabel="Browse all"
     actionHref="/categories#free"
   >
-    <div class="mu-row mu-row--lessons" data-reveal>
+    <Carousel variant="lessons" label="free lessons" data-reveal>
       {homeFree.map((l) => <LessonCard {...toCardProps(l)} />)}
-    </div>
+    </Carousel>
   </Section>
 
   <!-- ===================== PREMIUM LESSONS ===================== -->
@@ -112,9 +113,9 @@ const faqs = [
     actionLabel="Browse all"
     actionHref="/categories#premium"
   >
-    <div class="mu-row mu-row--lessons" data-reveal>
+    <Carousel variant="lessons" label="premium lessons" data-reveal>
       {homePremium.map((l) => <LessonCard {...toCardProps(l)} />)}
-    </div>
+    </Carousel>
   </Section>
 
   <!-- ===================== PRICING BAND (deep-green surface) ===================== -->

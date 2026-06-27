@@ -1,0 +1,95 @@
+---
+/**
+ * Carousel — a horizontal scroll row with ‹ › arrow buttons (desktop). The row
+ * still bleeds to the right viewport edge; the carousel owns the bleed so the
+ * next-arrow can pin to the visible right edge. Arrows hide at the ends, and on
+ * touch/mobile where swiping is natural. Keyboard + scroll accessible.
+ */
+interface Props {
+  variant: 'lessons' | 'cats';
+  label?: string;
+  [key: string]: unknown;
+}
+const { variant, label = 'items', ...rest } = Astro.props;
+---
+
+<div class="carousel" data-carousel {...rest}>
+  <div class={`mu-row mu-row--${variant}`} data-carousel-row tabindex="0">
+    <slot />
+  </div>
+  <button type="button" class="carousel__arrow carousel__arrow--prev" data-carousel-prev aria-label={`Scroll ${label} left`} hidden>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+  </button>
+  <button type="button" class="carousel__arrow carousel__arrow--next" data-carousel-next aria-label={`Scroll ${label} right`}>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+  </button>
+</div>
+
+<style>
+  .carousel {
+    position: relative;
+    margin-right: calc(50% - 50vw); /* bleed to viewport right edge */
+    padding-right: var(--mu-gutter);
+  }
+  /* the row no longer bleeds itself — the carousel owns it */
+  .carousel .mu-row { margin-right: 0; padding-right: 0; }
+  .carousel .mu-row:focus-visible { outline: none; }
+
+  .carousel__arrow {
+    position: absolute;
+    top: 96px; /* ~ vertical centre of the card media on desktop */
+    transform: translateY(-50%);
+    z-index: 3;
+    display: none;
+    width: 48px; height: 48px;
+    place-items: center;
+    color: var(--mu-white);
+    background: rgba(28, 28, 32, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: var(--mu-radius-pill);
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.85);
+    transition:
+      background-color var(--mu-dur) var(--mu-ease),
+      color var(--mu-dur) var(--mu-ease),
+      border-color var(--mu-dur) var(--mu-ease),
+      transform var(--mu-dur) var(--mu-ease);
+  }
+  .carousel__arrow:hover {
+    background: var(--mu-bronze);
+    color: var(--mu-on-accent);
+    border-color: var(--mu-bronze);
+    transform: translateY(-50%) scale(1.06);
+  }
+  .carousel__arrow--prev { left: -8px; }
+  .carousel__arrow--next { right: calc(var(--mu-gutter) - 8px); }
+
+  /* desktop only; respect the hidden (end-of-scroll) state */
+  @media (min-width: 900px) {
+    .carousel__arrow { display: grid; }
+    .carousel__arrow[hidden] { display: none; }
+  }
+</style>
+
+<script>
+  const RATIO = 0.85;
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((car) => {
+    const row = car.querySelector<HTMLElement>('[data-carousel-row]');
+    const prev = car.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+    const next = car.querySelector<HTMLButtonElement>('[data-carousel-next]');
+    if (!row || !prev || !next) return;
+
+    const update = () => {
+      const max = row.scrollWidth - row.clientWidth - 1;
+      prev.hidden = row.scrollLeft <= 0;
+      next.hidden = row.scrollLeft >= max;
+    };
+    const page = () => Math.max(240, row.clientWidth * RATIO);
+    prev.addEventListener('click', () => row.scrollBy({ left: -page(), behavior: 'smooth' }));
+    next.addEventListener('click', () => row.scrollBy({ left: page(), behavior: 'smooth' }));
+    row.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  });
+</script>
