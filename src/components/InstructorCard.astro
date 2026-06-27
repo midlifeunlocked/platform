@@ -63,7 +63,16 @@ const initials = name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpper
     text-transform: uppercase;
   }
   .instructor__name { font-size: var(--mu-text-xl); margin-top: var(--mu-space-1); }
-  .instructor__bio { margin-top: var(--mu-space-2); color: var(--mu-mute); font-size: var(--mu-text-sm); }
+  .instructor__bio {
+    margin-top: var(--mu-space-2);
+    color: var(--mu-mute);
+    font-size: var(--mu-text-sm);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
   .instructor__tags { display: flex; flex-wrap: wrap; gap: var(--mu-space-2); margin-top: var(--mu-space-1); }
   .instructor__tag {
     padding: 4px 12px;
