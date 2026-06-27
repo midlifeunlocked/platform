@@ -35,7 +35,7 @@ const playerSrc = lesson.streamId
 >
   <article>
     <!-- Player over a full-bleed backdrop of the lesson image -->
-    <section class="player" style={`--lesson-bg: url('${lesson.thumbnail}')`}>
+    <section class="player" style={`--lesson-bg: url('${lesson.backdrop || lesson.thumbnail}')`}>
       <div class="player__bg" aria-hidden="true"></div>
       <div class="player__scrim" aria-hidden="true"></div>
       <div class="mu-container player__inner">
