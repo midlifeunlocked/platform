@@ -3,7 +3,6 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Section from '@components/Section.astro';
 import LessonCard from '@components/LessonCard.astro';
 import InstructorCard from '@components/InstructorCard.astro';
-import Button from '@components/Button.astro';
 import Icon from '@components/Icon.astro';
 import { lessons, getInstructor, getCourse, instructorNames, relatedLessons, toCardProps } from '@/data/catalog';
 
@@ -18,13 +17,15 @@ const credit = instructorNames(lesson.instructorSlugs);
 const course = getCourse(lesson.courseSlug);
 const related = relatedLessons(lesson, 3);
 
-/*
- * Display gating. In Phase 1 we gate on the lesson's own `access` field. When
- * the entitlement layer is live this becomes:
- *   const unlocked = await canAccessLesson(user.id, lesson.id)
- * and the signed Cloudflare Stream token is only minted when `unlocked`.
- */
-const unlocked = lesson.access === 'free';
+// Cloudflare Stream subdomain for the MU account. Videos are currently public
+// (imported with requireSignedURLs:false), so every lesson with a streamId
+// plays for everyone. Phase 5 flips premium to signed URLs and only embeds the
+// player after `canAccessLesson(user.id, lesson.id)` returns true.
+const STREAM_CUSTOMER = 'customer-9992c2z2az4qp4mm.cloudflarestream.com';
+const isFree = lesson.access === 'free';
+const playerSrc = lesson.streamId
+  ? `https://${STREAM_CUSTOMER}/${lesson.streamId}/iframe?preload=metadata`
+  : null;
 ---
 
 <BaseLayout
@@ -42,17 +43,23 @@ const unlocked = lesson.access === 'free';
           <a href="/categories">{lesson.category}</a>
         </nav>
 
-        <div class:list={['stage', { 'stage--locked': !unlocked }]} data-reveal>
-          <img class="stage__img" src={lesson.thumbnail} alt="" width="1280" height="720" />
-          {unlocked ? (
-            <button class="stage__play" aria-label={`Play ${lesson.title}`}>
-              <Icon name="play" size={26} />
-            </button>
+        <div class="stage" data-reveal>
+          {playerSrc ? (
+            <iframe
+              class="stage__player"
+              src={playerSrc}
+              title={lesson.title}
+              loading="lazy"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+              allowfullscreen
+            ></iframe>
           ) : (
-            <div class="stage__lock">
-              <span class="stage__lockicon"><Icon name="lock" size={22} /></span>
-              <p class="stage__lockcopy">This is a Premium masterclass</p>
-              <Button href="/pricing" icon="arrow-right">Unlock with Premium</Button>
+            <div class="stage__soon">
+              <img class="stage__img" src={lesson.thumbnail} alt="" width="1280" height="720" />
+              <div class="stage__soon-overlay">
+                <span class="stage__lockicon"><Icon name="play" size={22} /></span>
+                <p class="stage__lockcopy">Video coming soon</p>
+              </div>
             </div>
           )}
         </div>
@@ -65,9 +72,9 @@ const unlocked = lesson.access === 'free';
         <div class="detail__main" data-reveal>
           <div class="detail__meta">
             <span class="detail__category">{lesson.category}</span>
-            <span class:list={['detail__badge', unlocked ? 'is-free' : 'is-premium']}>
-              <Icon name={unlocked ? 'unlock' : 'lock'} size={13} />
-              {unlocked ? 'Free' : 'Premium'}
+            <span class:list={['detail__badge', isFree ? 'is-free' : 'is-premium']}>
+              <Icon name={isFree ? 'unlock' : 'lock'} size={13} />
+              {isFree ? 'Free' : 'Premium'}
             </span>
             {lesson.duration && <span class="detail__duration">{lesson.duration}</span>}
             {course && <span class="detail__duration">Part of {course.name}</span>}
@@ -76,12 +83,8 @@ const unlocked = lesson.access === 'free';
           {lesson.description && <p class="detail__desc">{lesson.description}</p>}
           {credit && <p class="detail__by">Taught by <span class="detail__credit">{credit}</span></p>}
 
-          {!unlocked && (
-            <div class="detail__cta">
-              <Button href="/pricing" size="lg" icon="arrow-right">Unlock with Premium</Button>
-              <Button href="/signup" size="lg" variant="ghost">Start free</Button>
-            </div>
-          )}
+          {/* Phase 5 reinstates the premium gate (lock + "Unlock with Premium")
+              here, shown only when canAccessLesson() is false. */}
 
           {lesson.details && (
             <div class="detail__about">
@@ -129,32 +132,17 @@ const unlocked = lesson.access === 'free';
   .stage {
     position: relative;
     aspect-ratio: 16 / 9;
-    max-height: 64vh;
     border: 1px solid var(--mu-line);
     border-radius: var(--mu-radius-lg);
     overflow: hidden;
-    background: var(--mu-surface-3);
+    background: #000;
   }
-  .stage__img { width: 100%; height: 100%; object-fit: cover; }
-  .stage--locked .stage__img { filter: brightness(0.42) saturate(0.8); }
+  .stage__player { width: 100%; height: 100%; border: 0; display: block; }
 
-  .stage__play {
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    width: 76px; height: 76px;
-    display: grid;
-    place-items: center;
-    color: var(--mu-on-accent);
-    background: var(--mu-bronze);
-    border: none;
-    border-radius: var(--mu-radius-pill);
-    cursor: pointer;
-    transition: transform var(--mu-dur) var(--mu-ease), background-color var(--mu-dur) var(--mu-ease);
-  }
-  .stage__play:hover { transform: scale(1.06); background: var(--mu-bronze-soft); }
-
-  .stage__lock {
+  /* fallback for lessons whose video hasn't been ported yet */
+  .stage__soon { position: absolute; inset: 0; }
+  .stage__img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4) saturate(0.8); }
+  .stage__soon-overlay {
     position: absolute;
     inset: 0;
     display: grid;
