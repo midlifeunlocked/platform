@@ -10,13 +10,14 @@ interface Props {
   count: number;
   image: string;
   href?: string;
+  portrait?: boolean;
   [key: string]: unknown;
 }
 
-const { name, count, image, href = '#', ...rest } = Astro.props;
+const { name, count, image, href = '#', portrait = false, ...rest } = Astro.props;
 ---
 
-<a class="cat" href={href} {...rest}>
+<a class:list={['cat', { 'cat--portrait': portrait }]} href={href} {...rest}>
   <img class="cat__img" src={image} alt="" loading="lazy" />
   <span class="cat__scrim"></span>
   <span class="cat__lock"><Icon name="lock" size={15} /></span>
@@ -38,6 +39,7 @@ const { name, count, image, href = '#', ...rest } = Astro.props;
     overflow: hidden;
     transition: transform var(--mu-dur) var(--mu-ease), border-color var(--mu-dur) var(--mu-ease);
   }
+  .cat--portrait { aspect-ratio: 3 / 4; }
   .cat:hover { color: var(--mu-white); transform: translateY(-4px); border-color: var(--mu-bronze); }
 
   .cat__img {

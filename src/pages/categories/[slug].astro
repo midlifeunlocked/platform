@@ -1,0 +1,95 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Section from '@components/Section.astro';
+import LessonCard from '@components/LessonCard.astro';
+import CategoryCard from '@components/CategoryCard.astro';
+import Carousel from '@components/Carousel.astro';
+import Button from '@components/Button.astro';
+import { categories, lessonsByCategory, categoryCount, toCardProps } from '@/data/catalog';
+
+export function getStaticPaths() {
+  return categories.map((category) => ({ params: { slug: category.slug }, props: { category } }));
+}
+
+const { category } = Astro.props;
+const catLessons = lessonsByCategory(category.name);
+// Feature a lesson with a real video (prefer a free one) so "Watch now" leads
+// to something playable, not a "coming soon" page.
+const featured =
+  catLessons.find((l) => l.access === 'free' && l.streamId) ??
+  catLessons.find((l) => l.streamId) ??
+  catLessons[0];
+const others = categories.filter((c) => c.slug !== category.slug);
+const bg = featured?.backdrop || category.image;
+---
+
+<BaseLayout
+  title={`${category.name} — Midlife Unlocked`}
+  description={`${category.name} masterclasses on Midlife Unlocked. ${category.blurb}`}
+>
+  <article>
+    <!-- Featured hero -->
+    <section class="chero" style={`--bg: url('${bg}')`}>
+      <div class="chero__bg" aria-hidden="true"></div>
+      <div class="chero__scrim" aria-hidden="true"></div>
+      <div class="mu-container chero__inner">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/categories">Catalogue</a><span aria-hidden="true">/</span><span>{category.name}</span>
+        </nav>
+        {featured && (
+          <>
+            <span class="mu-eyebrow" data-reveal>Featured in {category.name}</span>
+            <h1 class="chero__title" data-reveal style="--reveal-delay:70ms">{featured.title}</h1>
+            {featured.description && <p class="chero__desc" data-reveal style="--reveal-delay:140ms">{featured.description}</p>}
+            <div class="chero__actions" data-reveal style="--reveal-delay:200ms">
+              <Button href={`/lessons/${featured.slug}`} size="lg" icon="play">Watch now</Button>
+              <Button href="#lessons" size="lg" variant="ghost">All {category.name.toLowerCase()} lessons</Button>
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+
+    <!-- All lessons in this category -->
+    <Section id="lessons" eyebrow={`${catLessons.length} ${catLessons.length === 1 ? 'lesson' : 'lessons'}`} title={`${category.name} lessons`}>
+      <div class="lesson-grid">
+        {catLessons.map((l, i) => <LessonCard {...toCardProps(l)} data-reveal style={`--reveal-delay:${(i % 6) * 70}ms`} />)}
+      </div>
+    </Section>
+
+    <!-- More categories -->
+    <Section tone="inset" eyebrow="Keep exploring" title="More categories">
+      <Carousel variant="cats" label="categories" data-reveal>
+        {others.map((c) => <CategoryCard name={c.name} count={categoryCount(c.name)} image={c.image} href={`/categories/${c.slug}`} />)}
+      </Carousel>
+    </Section>
+  </article>
+</BaseLayout>
+
+<style>
+  .chero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: clamp(460px, 70vh, 680px);
+    margin-top: -72px;
+    padding-top: 72px;
+    overflow: hidden;
+  }
+  .chero__bg {
+    position: absolute; inset: 0; z-index: 0;
+    background-image: var(--bg); background-size: cover; background-position: 50% 28%;
+  }
+  .chero__scrim {
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(to top, var(--mu-bg) 2%, rgba(18,18,20,0.84) 28%, rgba(18,18,20,0.32) 64%, rgba(18,18,20,0.55) 100%);
+  }
+  .chero__inner { position: relative; z-index: 2; width: 100%; padding-block: var(--mu-space-7) var(--mu-space-8); }
+  .crumbs { display: flex; gap: var(--mu-space-2); margin-bottom: var(--mu-space-5); color: var(--mu-mute); font-size: var(--mu-text-sm); }
+  .crumbs a { color: var(--mu-fog); }
+  .crumbs a:hover { color: var(--mu-bronze-soft); }
+  .chero__title { margin-top: var(--mu-space-4); font-size: var(--mu-text-4xl); max-width: 18ch; }
+  .chero__desc { margin-top: var(--mu-space-4); font-size: var(--mu-text-lg); color: var(--mu-fog); max-width: 56ch; }
+  .chero__actions { display: flex; flex-wrap: wrap; gap: var(--mu-space-4); margin-top: var(--mu-space-6); }
+  :global(section[id]) { scroll-margin-top: 96px; }
+</style>

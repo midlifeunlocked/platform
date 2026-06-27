@@ -159,6 +159,15 @@ export const premiumLessons = (): Lesson[] => lessons.filter((l) => l.access ===
 export const lessonsByInstructor = (slug: string): Lesson[] =>
   lessons.filter((l) => l.instructorSlugs.includes(slug));
 
+/** Other lessons in the same course, in course order. */
+export const lessonsByCourse = (courseSlug: string): Lesson[] =>
+  lessons
+    .filter((l) => l.courseSlug === courseSlug)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+export const getCategory = (slug: string): Category | undefined =>
+  categories.find((c) => c.slug === slug);
+
 export const relatedLessons = (lesson: Lesson, limit = 3): Lesson[] =>
   lessons
     .filter((l) => l.slug !== lesson.slug && l.category === lesson.category)

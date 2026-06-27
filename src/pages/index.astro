@@ -75,7 +75,7 @@ const faqs = [
 
         <div class="hero__actions" data-reveal style="--reveal-delay:340ms">
           <Button href="/signup" size="lg" icon="arrow-right">Sign up free</Button>
-          <Button href="/categories#free" size="lg" variant="ghost" icon="play">Watch a free lesson</Button>
+          <Button href="#free" size="lg" variant="ghost" icon="play">Watch a free lesson</Button>
         </div>
         <p class="hero__signin" data-reveal style="--reveal-delay:420ms">Already have an account? <a href="/login">Log in</a>.</p>
       </div>
@@ -89,7 +89,7 @@ const faqs = [
     actionHref="/categories"
   >
     <Carousel variant="cats" label="categories" data-reveal>
-      {categories.map((c) => <CategoryCard name={c.name} count={categoryCount(c.name)} image={c.image} href={`/categories#${c.slug}`} />)}
+      {categories.map((c) => <CategoryCard name={c.name} count={categoryCount(c.name)} image={c.image} href={`/categories/${c.slug}`} />)}
     </Carousel>
   </Section>
 
@@ -99,7 +99,7 @@ const faqs = [
     tone="inset"
     title="Free core lessons"
     actionLabel="Browse all"
-    actionHref="/categories#free"
+    actionHref="/categories"
   >
     <Carousel variant="lessons" label="free lessons" data-reveal>
       {homeFree.map((l) => <LessonCard {...toCardProps(l)} />)}
@@ -111,7 +111,7 @@ const faqs = [
     id="premium"
     title="Premium lessons"
     actionLabel="Browse all"
-    actionHref="/categories#premium"
+    actionHref="/categories"
   >
     <Carousel variant="lessons" label="premium lessons" data-reveal>
       {homePremium.map((l) => <LessonCard {...toCardProps(l)} />)}

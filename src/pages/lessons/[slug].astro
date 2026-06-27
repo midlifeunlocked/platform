@@ -4,8 +4,9 @@ import Section from '@components/Section.astro';
 import LessonCard from '@components/LessonCard.astro';
 import InstructorCard from '@components/InstructorCard.astro';
 import Button from '@components/Button.astro';
+import Carousel from '@components/Carousel.astro';
 import Icon from '@components/Icon.astro';
-import { lessons, getInstructor, getCourse, instructorNames, relatedLessons, toCardProps } from '@/data/catalog';
+import { lessons, getInstructor, getCourse, instructorNames, relatedLessons, lessonsByCourse, toCardProps } from '@/data/catalog';
 
 export function getStaticPaths() {
   return lessons.map((lesson) => ({ params: { slug: lesson.slug }, props: { lesson } }));
@@ -16,6 +17,7 @@ const lessonInstructors = lesson.instructorSlugs.map(getInstructor).filter(Boole
 const instructor = lessonInstructors[0];
 const credit = instructorNames(lesson.instructorSlugs);
 const course = getCourse(lesson.courseSlug);
+const courseSiblings = course ? lessonsByCourse(course.slug).filter((l) => l.slug !== lesson.slug) : [];
 const related = relatedLessons(lesson, 3);
 const bg = lesson.backdrop || lesson.thumbnail;
 
@@ -99,6 +101,15 @@ const playerSrc = lesson.streamId ? `https://${STREAM_CUSTOMER}/${lesson.streamI
         </aside>
       </div>
     </Section>
+
+    <!-- COURSE SIBLINGS -->
+    {course && courseSiblings.length > 0 && (
+      <Section eyebrow="Course" title={`More from ${course.name}`}>
+        <Carousel variant="lessons" label={course.name} data-reveal>
+          {courseSiblings.map((l) => <LessonCard {...toCardProps(l)} />)}
+        </Carousel>
+      </Section>
+    )}
 
     <!-- RELATED -->
     <Section tone="inset" eyebrow="Keep going" title="More like this">
