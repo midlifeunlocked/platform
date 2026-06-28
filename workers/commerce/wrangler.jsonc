@@ -1,0 +1,12 @@
+{
+  // MU Commerce Worker — owned money/access service (PROJECT_SPEC §8).
+  // Deployed separately from the Pages site:  cd workers/commerce && wrangler deploy
+  // Secrets (set via `wrangler secret put NAME` or .dev.vars for local):
+  //   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_SERVICE_ROLE_KEY
+  // Var: SUPABASE_URL
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "mu-commerce",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": ["nodejs_compat"]
+}
