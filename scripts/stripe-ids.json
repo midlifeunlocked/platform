@@ -1,0 +1,22 @@
+{
+  "masterclass-dating": {
+    "productId": "prod_UmkM95plcmNJfU",
+    "priceId": "price_1TnArREDvWZDkuTx90mKXteM",
+    "amount": 2700
+  },
+  "bump-assessment-call": {
+    "productId": "prod_UmkMeKec7LARSH",
+    "priceId": "price_1TnArSEDvWZDkuTx4cFBzl0X",
+    "amount": 9700
+  },
+  "upsell-group-coaching": {
+    "productId": "prod_UmkMAMsB551hc5",
+    "priceId": "price_1TnArSEDvWZDkuTx5scGFeKU",
+    "amount": 49700
+  },
+  "downsell-advanced-tactics": {
+    "productId": "prod_UmkMuilaagCAGg",
+    "priceId": "price_1TnArTEDvWZDkuTxDa4zGyyE",
+    "amount": 4700
+  }
+}
