@@ -12,11 +12,19 @@
 
 import type { EntitlementProvider } from './types';
 import { StubEntitlementProvider } from './stub';
+import { SupabaseEntitlementProvider } from './supabaseProvider';
+import { getBrowserClient, supabaseConfigured } from './supabaseClient';
 
 export * from './types';
 
-/** The active provider. Phase 3: replace with `new SupabaseEntitlementProvider(...)`. */
-const provider: EntitlementProvider = new StubEntitlementProvider();
+/**
+ * The active provider. Uses the real Supabase-backed provider when the public
+ * env is configured; falls back to the deny-all stub otherwise (e.g. a build
+ * with no env), so nothing breaks. Same §6 interface either way.
+ */
+const provider: EntitlementProvider = supabaseConfigured
+  ? new SupabaseEntitlementProvider(getBrowserClient())
+  : new StubEntitlementProvider();
 
 // Bound function exports — the surface every feature calls.
 export const getCurrentUser = provider.getCurrentUser.bind(provider);
