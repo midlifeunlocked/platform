@@ -10,8 +10,7 @@ import Button from '@components/Button.astro';
       <h1 class="auth__title">Welcome back</h1>
       <p class="auth__sub">Log in to pick up where you left off.</p>
 
-      <!-- NOTE: presentational in Phase 1; wired to Supabase auth in a later phase. -->
-      <form class="auth__form">
+      <form class="auth__form" novalidate>
         <div class="field">
           <label for="email">Email</label>
           <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
@@ -26,9 +25,32 @@ import Button from '@components/Button.astro';
         <Button type="submit" full size="lg">Log in</Button>
       </form>
 
+      <p class="auth__msg" data-msg role="alert" hidden></p>
       <p class="auth__alt">New to Midlife Unlocked? <a href="/signup">Sign up free</a>.</p>
     </div>
   </section>
+
+  <script>
+    import { signIn } from '@/lib/auth';
+    const form = document.querySelector<HTMLFormElement>('.auth__form');
+    const msg = document.querySelector<HTMLElement>('[data-msg]');
+    const next = new URLSearchParams(location.search).get('next') ?? '/account';
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button');
+      const email = (form.querySelector<HTMLInputElement>('#email'))?.value.trim() ?? '';
+      const password = (form.querySelector<HTMLInputElement>('#password'))?.value ?? '';
+      if (btn) btn.disabled = true;
+      if (msg) msg.hidden = true;
+      try {
+        await signIn(email, password);
+        location.href = next;
+      } catch (err) {
+        if (msg) { msg.textContent = (err as Error).message || 'Could not log in.'; msg.hidden = false; }
+        if (btn) btn.disabled = false;
+      }
+    });
+  </script>
 </BaseLayout>
 
 <style>
@@ -65,4 +87,14 @@ import Button from '@components/Button.astro';
   .field input:focus { outline: none; border-color: var(--mu-bronze); }
   .auth__alt { margin-top: var(--mu-space-5); color: var(--mu-mute); font-size: var(--mu-text-sm); }
   .auth__alt a { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
+  .auth__msg {
+    margin-top: var(--mu-space-4);
+    padding: var(--mu-space-3) var(--mu-space-4);
+    color: #ffd9c2;
+    background: rgba(164, 97, 51, 0.16);
+    border: 1px solid var(--mu-bronze);
+    border-radius: var(--mu-radius-sm);
+    font-size: var(--mu-text-sm);
+  }
+  .auth__msg.is-ok { color: #cdeccd; background: rgba(46, 120, 64, 0.18); border-color: #2e7840; }
 </style>

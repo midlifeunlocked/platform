@@ -21,8 +21,7 @@ const perks = [
         {perks.map((p) => <li><Icon name="check" size={15} /> {p}</li>)}
       </ul>
 
-      <!-- NOTE: presentational in Phase 1; wired to Supabase auth in a later phase. -->
-      <form class="auth__form">
+      <form class="auth__form" novalidate>
         <div class="field">
           <label for="name">Name</label>
           <input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
@@ -38,9 +37,38 @@ const perks = [
         <Button type="submit" full size="lg" icon="arrow-right">Sign up free</Button>
       </form>
 
+      <p class="auth__msg" data-msg role="alert" hidden></p>
       <p class="auth__alt">Already have an account? <a href="/login">Log in</a>.</p>
     </div>
   </section>
+
+  <script>
+    import { signUp } from '@/lib/auth';
+    const form = document.querySelector<HTMLFormElement>('.auth__form');
+    const msg = document.querySelector<HTMLElement>('[data-msg]');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button');
+      const name = (form.querySelector<HTMLInputElement>('#name'))?.value.trim();
+      const email = (form.querySelector<HTMLInputElement>('#email'))?.value.trim() ?? '';
+      const password = (form.querySelector<HTMLInputElement>('#password'))?.value ?? '';
+      if (btn) btn.disabled = true;
+      if (msg) { msg.hidden = true; msg.classList.remove('is-ok'); }
+      try {
+        const { session } = await signUp(email, password, name);
+        if (session) {
+          location.href = '/account';
+        } else if (msg) {
+          msg.textContent = 'Almost there — check your email to confirm your account, then log in.';
+          msg.classList.add('is-ok');
+          msg.hidden = false;
+        }
+      } catch (err) {
+        if (msg) { msg.textContent = (err as Error).message || 'Could not sign up.'; msg.hidden = false; }
+        if (btn) btn.disabled = false;
+      }
+    });
+  </script>
 </BaseLayout>
 
 <style>
@@ -77,4 +105,14 @@ const perks = [
   .field input:focus { outline: none; border-color: var(--mu-bronze); }
   .auth__alt { margin-top: var(--mu-space-5); color: var(--mu-mute); font-size: var(--mu-text-sm); }
   .auth__alt a { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
+  .auth__msg {
+    margin-top: var(--mu-space-4);
+    padding: var(--mu-space-3) var(--mu-space-4);
+    color: #ffd9c2;
+    background: rgba(164, 97, 51, 0.16);
+    border: 1px solid var(--mu-bronze);
+    border-radius: var(--mu-radius-sm);
+    font-size: var(--mu-text-sm);
+  }
+  .auth__msg.is-ok { color: #cdeccd; background: rgba(46, 120, 64, 0.18); border-color: #2e7840; }
 </style>

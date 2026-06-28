@@ -1,0 +1,102 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/Button.astro';
+---
+
+<BaseLayout title="Your account — Midlife Unlocked" description="Your Midlife Unlocked account." noindex>
+  <section class="acct">
+    <div class="mu-container acct__inner">
+      <p class="acct__loading" data-loading>Loading your account…</p>
+
+      <div class="acct__body" data-member hidden>
+        <header class="acct__head">
+          <div>
+            <span class="mu-eyebrow">Account</span>
+            <h1 class="acct__title">Welcome back</h1>
+            <p class="acct__email" data-email></p>
+          </div>
+          <button type="button" class="acct__signout" data-signout>Log out</button>
+        </header>
+
+        <h2 class="acct__h">What you own</h2>
+        <ul class="acct__list" data-list>
+          <li class="acct__empty" data-empty hidden>
+            You haven't unlocked anything yet. <a href="/categories">Browse the catalogue →</a>
+          </li>
+        </ul>
+
+        <div class="acct__cta">
+          <Button href="/categories" variant="ghost" icon="arrow-right">Browse lessons</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import { getSession, signOut } from '@/lib/auth';
+    import { getBrowserClient } from '@/lib/entitlements/supabaseClient';
+
+    const loading = document.querySelector<HTMLElement>('[data-loading]');
+    const member = document.querySelector<HTMLElement>('[data-member]');
+    const emailEl = document.querySelector<HTMLElement>('[data-email]');
+    const list = document.querySelector<HTMLElement>('[data-list]');
+    const empty = document.querySelector<HTMLElement>('[data-empty]');
+
+    const session = await getSession();
+    if (!session) {
+      location.href = '/login?next=/account';
+    } else {
+      if (loading) loading.hidden = true;
+      if (member) member.hidden = false;
+      if (emailEl) emailEl.textContent = session.user.email ?? '';
+
+      const { data } = await getBrowserClient()
+        .from('entitlements')
+        .select('status, products(name)')
+        .eq('user_id', session.user.id)
+        .eq('status', 'active');
+
+      const owned = (data ?? []) as unknown as { products: { name: string } | null }[];
+      if (owned.length === 0) {
+        if (empty) empty.hidden = false;
+      } else {
+        for (const row of owned) {
+          const li = document.createElement('li');
+          li.className = 'acct__own';
+          li.textContent = row.products?.name ?? 'Unlocked content';
+          list?.appendChild(li);
+        }
+      }
+
+      document.querySelector('[data-signout]')?.addEventListener('click', async () => {
+        await signOut();
+        location.href = '/';
+      });
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  .acct { padding: clamp(2.5rem, 6vw, 5rem) 0; }
+  .acct__loading { color: var(--mu-mute); }
+  .acct__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--mu-space-5); flex-wrap: wrap; }
+  .acct__title { font-size: var(--mu-text-3xl); margin-top: var(--mu-space-2); }
+  .acct__email { margin-top: var(--mu-space-2); color: var(--mu-mute); }
+  .acct__signout {
+    padding: var(--mu-space-2) var(--mu-space-4);
+    color: var(--mu-fog); font: inherit; font-size: var(--mu-text-sm);
+    background: transparent; border: 1px solid var(--mu-line); border-radius: var(--mu-radius-pill); cursor: pointer;
+    transition: border-color var(--mu-dur) var(--mu-ease), color var(--mu-dur) var(--mu-ease);
+  }
+  .acct__signout:hover { color: var(--mu-white); border-color: var(--mu-bronze); }
+  .acct__h { font-size: var(--mu-text-xl); margin: var(--mu-space-8) 0 var(--mu-space-4); }
+  .acct__list { display: grid; gap: var(--mu-space-3); }
+  .acct__own, .acct__empty {
+    padding: var(--mu-space-4) var(--mu-space-5);
+    background: var(--mu-surface-2); border: 1px solid var(--mu-line-soft); border-radius: var(--mu-radius);
+  }
+  .acct__own { color: var(--mu-white); font-weight: var(--mu-weight-bold); }
+  .acct__empty { color: var(--mu-fog); }
+  .acct__empty a { color: var(--mu-bronze-soft); font-weight: var(--mu-weight-bold); }
+  .acct__cta { margin-top: var(--mu-space-7); }
+</style>
